@@ -9,8 +9,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 const height = Dimensions.get('screen').height
 const width = Dimensions.get('screen').width
 
-const NewInventoryFormPage = () => {
+const EditInventoryFormPage = (props) => {
 
+    let item = props?.route?.params?.item
     const navigation = useNavigation()
     const [meatName, setMeatName] = useState('')
     const [meatNameFocus, setMeatNameFocus] = useState(false)
@@ -22,6 +23,15 @@ const NewInventoryFormPage = () => {
     const [showFailedModal, setShowFailedModal] = useState(false)
 
     const regexMeatName = /^[a-zA-Z]+$/
+
+    const capitalizeFirstLetter = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
+    useEffect(() => {
+        setMeatName(capitalizeFirstLetter(item?.Meat?.name))
+        setMeatStock(String(item?.Meat?.stock))
+    }, [])
 
     useEffect(() => {
         if(regexMeatName.test(meatName)) setErrorMeatNameField(false)
@@ -36,9 +46,9 @@ const NewInventoryFormPage = () => {
             stock: meatStock,
             price: 1
         }
-        console.log(`PostMeat: ${data}`)
+        console.log(`EditMeat: ${data}`)
         let response = {
-            statuscode: 400,
+            statuscode: 200,
         }
 
         if(response.statuscode === 200) {
@@ -96,7 +106,7 @@ const NewInventoryFormPage = () => {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <IonIcons name="arrow-back" size={28} color={'#F1F2FE'} style={{ marginTop: 2 }} />
                 </TouchableOpacity>
-                <Text style={{ fontFamily: 'Poppins-SemiBold', color: '#F1F2FE', fontSize: 20, marginLeft: 10 }}>Add New Inventory</Text>
+                <Text style={{ fontFamily: 'Poppins-SemiBold', color: '#F1F2FE', fontSize: 20, marginLeft: 10 }}>Edit Inventory</Text>
             </View>
             <View style={{ flex: 1, backgroundColor: '#F1F2FE', marginTop: 35, borderTopLeftRadius: 50, borderTopRightRadius: 50, }}>
                 <View style={{ paddingHorizontal: 30, marginTop: 50 }}>
@@ -149,7 +159,7 @@ const NewInventoryFormPage = () => {
                         <TouchableOpacity onPress={() => postMeat()} disabled={disableSaveButton} style={{ backgroundColor: (disableSaveButton) ? '#CACEDD' : '#505384', padding: 10, paddingHorizontal: 40, borderRadius: 10 }}>
                             <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                 <MaterialIcons name='save-as' size={24} color={'#FFF'} style={{ marginRight: 5 }} />
-                                <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#FFF' }}>Save</Text>
+                                <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#FFF' }}>Edit</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -161,7 +171,7 @@ const NewInventoryFormPage = () => {
     )
 }
 
-export default NewInventoryFormPage
+export default EditInventoryFormPage
 
 const styles = StyleSheet.create({
     modalDim: {

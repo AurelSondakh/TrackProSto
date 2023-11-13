@@ -5,11 +5,13 @@ import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { useNavigation } from '@react-navigation/native'
 
 const width = Dimensions.get('screen').width
 
 const InventoryList = ({item}) => {
 
+    const navigation = useNavigation()
     const [showInventoryDetail, setShowInventoryDetail] = useState(false)
 
     const capitalizeFirstLetter = (str) => {
@@ -31,7 +33,7 @@ const InventoryList = ({item}) => {
                     <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 12, marginTop: 10, marginLeft: 10 }}>Stock In: <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13 }}>{numberWithCommas(item.StockIn)} Kg</Text></Text>
                     <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 12, marginLeft: 10 }}>Stock Out: <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13 }}>{numberWithCommas(item.StockOut)} Kg</Text></Text>
                 </View>
-                <TouchableOpacity style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center', alignSelf: 'center' }}>
+                <TouchableOpacity onPress={() => navigation.navigate('EditInventoryFormPage', {item})} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center', alignSelf: 'center' }}>
                     <FontAwesome name="edit" color={'#FFF'} size={18} style={{ marginRight: 10, alignSelf: 'center' }} />
                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF' }}>
                         Edit Inventory
