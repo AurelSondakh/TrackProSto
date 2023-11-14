@@ -90,7 +90,7 @@ const CustomerCompanyPage = () => {
         <View style={{ flex: 1, backgroundColor: '#F2F1FE' }} >
             <View style={{ marginHorizontal: 15, marginTop: 20, paddingBottom: 8 }}>
                 <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14 }}>Customer Overview</Text>
-                <TouchableOpacity onPress={() => {}} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => navigation.navigate('NewCustomerFormPage')} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
                     <AntDesign name="pluscircle" color={'#FFF'} size={18} style={{ marginRight: 10,alignSelf: 'center' }} />
                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF', alignSelf: 'center' }}>
                         Add New Customer

@@ -39,27 +39,9 @@ const CompanyList = (props) => {
         )
     }
 
-    const companyDetail = () => {
-        return (
-            <><View style={{ marginTop: 10, borderTopWidth: 2, borderStyle: 'dashed', borderRadius: 1, borderColor: '#DADDDF', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <View>
-                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 12, marginTop: 10, marginLeft: 10 }}>Phone Number</Text>
-                    <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, marginLeft: 10, color: '#505383' }}>{item?.phone_number}</Text>
-                </View>
-                <View>
-                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 12, marginRight: 10, marginTop: 10, textAlign: 'right' }}>Email</Text>
-                    <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, textAlign:'right', color: '#505383', width: width / 2, marginRight: 10 }}>{item?.email}</Text>
-                </View>
-            </View>
-            <TouchableOpacity onPress={() => {}} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 15, marginHorizontal: 15, justifyContent: 'center' }}>
-                <FontAwesome name="edit" color={'#FFF'} size={18} style={{ marginRight: 10, alignSelf: 'center' }} />
-                <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF' }}>
-                    Edit
-                </Text>
-            </TouchableOpacity>
-            </>
-        )
-    }
+    const numberWithCommas = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
 
     return (
         <TouchableOpacity style={{ paddingHorizontal: 15, marginTop: 10 }}>
@@ -67,6 +49,16 @@ const CompanyList = (props) => {
                 <Swipeable renderRightActions={leftSwipe}>
                     <View style={{ padding: 15, backgroundColor: '#FFF', borderRadius: 10 }}>
                         <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14, color: '#505383' }}>{capitalizeFirstLetter(item.company_name)}</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                             <View style={{ width: width / 2 }}>
+                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13, width: width/1.3 }}>Phone Number</Text>
+                                 <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#505383', marginTop: -5, width: width / 1.3 }}>{item?.phone_number}</Text>
+                             </View>
+                             <View style={{ }}>
+                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13 }}>Total Customer</Text>
+                                <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#505383', marginTop: -5, width: width / 3.5 }}>{numberWithCommas(2000)}</Text>
+                            </View>
+                        </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
                             <View>
                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13, width: width/1.3 }}>Address</Text>

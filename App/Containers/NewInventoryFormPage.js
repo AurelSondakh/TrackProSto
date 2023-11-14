@@ -21,9 +21,8 @@ const NewInventoryFormPage = () => {
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showFailedModal, setShowFailedModal] = useState(false)
 
-    const regexMeatName = /^[a-zA-Z]+$/
-
     useEffect(() => {
+        const regexMeatName = /^(?!\s+$)[a-zA-Z\s]+$/
         if(regexMeatName.test(meatName)) setErrorMeatNameField(false)
         else setErrorMeatNameField(true)
         if(meatName !== '' && !errorMeatNameField && meatStock !=='') setDisableSaveButton(false)

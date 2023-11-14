@@ -22,6 +22,7 @@ const CustomerList = (props) => {
     // "debt": 0
 
     let item = props?.item
+    const navigation = useNavigation()
 
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
