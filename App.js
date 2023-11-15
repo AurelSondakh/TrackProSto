@@ -19,6 +19,7 @@ import NewInventoryFormPage from './App/Containers/NewInventoryFormPage'
 import EditInventoryFormPage from './App/Containers/EditInventoryFormPage'
 import CustomerCompanyPage from './App/Containers/CustomerCompanyPage'
 import NewCustomerFormPage from './App/Containers/NewCustomerFormPage'
+import NewCompanyFormPage from './App/Containers/NewCompanyFormPage'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -159,6 +160,7 @@ const StackNavigator = () => (
     <Stack.Screen name='NewInventoryFormPage' component={NewInventoryFormPage} options={horizontalAnimation} />
     <Stack.Screen name='EditInventoryFormPage' component={EditInventoryFormPage} options={horizontalAnimation} />
     <Stack.Screen name='NewCustomerFormPage' component={NewCustomerFormPage} options={horizontalAnimation} />
+    <Stack.Screen name='NewCompanyFormPage' component={NewCompanyFormPage} options={horizontalAnimation} />
   </Stack.Navigator>
 )
 

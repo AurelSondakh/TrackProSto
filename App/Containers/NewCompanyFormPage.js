@@ -1,36 +1,40 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity, TextInput, Modal, Image, StyleSheet, SafeAreaView, Dimensions } from 'react-native'
+import React, {useState, useEffect} from 'react'
+import { View, Text, TouchableOpacity, TextInput, SafeAreaView, Modal, Image, StyleSheet, Dimensions } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { useNavigation } from '@react-navigation/native'
 
-const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
+const width = Dimensions.get('screen').width
 
-const NewCustomerFormPage = () => {
+const NewCompanyFormPage = () => {
 
     const navigation = useNavigation()
-    const [fullName, setFullName] = useState('')
-    const [fullNameFocus, setFullNameFocus] = useState(false)
-    const [errorFullNameField, setErrorFullNameField] = useState(false)
-    const [disableSaveButton, setDisableSaveButton] = useState(true)
+
+    const [companyName, setCompanyName] = useState('')
+    const [companyNameFocus, setCompanyNameFocus] = useState(false)
+    const [errorCompanyNameField, setErrorCompanyNameField] = useState(false)
+    const [companyEmail, setCompanyEmail] = useState('')
+    const [companyEmailFocus, setCompanyEmailFocus] = useState(false)
+    const [errorCompanyEmailField, setErrorCompanyEmailField] = useState(false)
     const [phoneNumber, setPhoneNumber] = useState('')
     const [phoneNumberFocus, setPhoneNumberFocus] = useState(false)
     const [errorPhoneNumberField, setErrorPhoneNumberField] = useState(false)
-    const [customerAddress, setCustomerAddress] = useState('')
-    const [customerAddressFocus, setCustomerAddressFocus] = useState(false)
+    const [companyAddress, setCompanyAddress] = useState('')
+    const [companyAddressFocus, setCompanyAddressFocus] = useState(false)
+    const [disableSaveButton, setDisableSaveButton] = useState(true)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showFailedModal, setShowFailedModal] = useState(false)
 
-    const postCustomer = () => {
+    const postCompany = () => {
         let data = {
-            fullname: fullName,
-            address: customerAddress,
-            phone_number: phoneNumber,
-            company_id: 'd84c6493-a14e-4bdf-9970-49a00144900f'
+            company_name: companyName,
+            address: companyAddress,
+            email: companyEmail,
+            phone_number: phoneNumber
         }
-        console.log(`PostCustomer: ${data}`)
+        console.log(`PostCompany: ${data}`)
         let response = {
             statuscode: 400,
         }
@@ -41,16 +45,22 @@ const NewCustomerFormPage = () => {
     }
 
     useEffect(() => {
-        if(fullName !== '' && customerAddress !== '' && phoneNumber !== '' && !errorFullNameField && !errorPhoneNumberField) {
+        if(companyName !== '' && companyEmail !== '' && phoneNumber !== '' && companyAddress !== '' && !errorCompanyNameField && !errorCompanyEmailField && !errorPhoneNumberField) {
             setDisableSaveButton(false)
         } else setDisableSaveButton(true)
-    }, [fullName, customerAddress, phoneNumber, errorFullNameField, errorPhoneNumberField])
+    }, [companyName, companyEmail, phoneNumber, companyAddress, errorCompanyNameField, errorCompanyEmailField, errorPhoneNumberField])
 
     useEffect(() => {
-        const regexFullName = /^(?!\s+$)[a-zA-Z\s]+$/
-        if(regexFullName.test(fullName)) setErrorFullNameField(false)
-        else setErrorFullNameField(true)
-    }, [fullName])
+        const regexCompanyName = /^(?!\s+$)[a-zA-Z\s]+$/
+        if(regexCompanyName.test(companyName)) setErrorCompanyNameField(false)
+        else setErrorCompanyNameField(true)
+    }, [companyName])
+
+    useEffect(() => {
+        const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+        if(regexEmail.test(companyEmail)) setErrorCompanyEmailField(false)
+        else setErrorCompanyEmailField(true)
+    }, [companyEmail])
 
     useEffect(() => {
         const regexNumberPlus = /^[0-9+]+$/
@@ -66,7 +76,7 @@ const NewCustomerFormPage = () => {
                         <View style={[styles.modalBG, {marginVertical: height / 3.5}]}>
                             <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
                                 <Image source={require('../assets/correctModal.png')} style={{ width: 128, height: 128, alignSelf: 'center' }} />
-                                <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center' }}>Customer has been added successfully</Text>
+                                <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center' }}>Company has been added successfully</Text>
                                 <TouchableOpacity onPress={() => {setShowSuccessModal(false); navigation.goBack()}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
                                         Close
@@ -88,7 +98,7 @@ const NewCustomerFormPage = () => {
                         <View style={styles.modalBG}>
                             <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
                                 <Image source={require('../assets/failedModal.png')} style={{ width: 96, height: 96, alignSelf: 'center' }} />
-                                <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center', marginTop: 20 }}>Customer addition has failed, please recheck your field!</Text>
+                                <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center', marginTop: 20 }}>Company addition has failed, please recheck your field!</Text>
                                 <TouchableOpacity onPress={() => {setShowFailedModal(false)}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
                                         Close
@@ -102,36 +112,35 @@ const NewCustomerFormPage = () => {
         )
     }
 
-
     return (
         <View style={{ flex: 1, backgroundColor: '#505383' }}>
             <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 15 }}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <IonIcons name="arrow-back" size={28} color={'#F1F2FE'} style={{ marginTop: 2 }} />
                 </TouchableOpacity>
-                <Text style={{ fontFamily: 'Poppins-SemiBold', color: '#F1F2FE', fontSize: 20, marginLeft: 10 }}>Add New Customer</Text>
+                <Text style={{ fontFamily: 'Poppins-SemiBold', color: '#F1F2FE', fontSize: 20, marginLeft: 10 }}>Add New Company</Text>
             </View>
             <View style={{ flex: 1, backgroundColor: '#F1F2FE', marginTop: 35, borderTopLeftRadius: 50, borderTopRightRadius: 50, }}>
                 <View style={{ paddingHorizontal: 30, marginTop: 50 }}>
                     <View>
-                        <Text style={{ fontFamily: 'Poppins-Medium', color: (!fullNameFocus) ? '#000' : (!errorFullNameField || fullName === '') ? '#505383' : '#E93939', fontSize: (!fullNameFocus) ? 12 : 14 }}>
-                            Full Name
+                        <Text style={{ fontFamily: 'Poppins-Medium', color: (!companyNameFocus) ? '#000' : (!errorCompanyNameField || companyName === '') ? '#505383' : '#E93939', fontSize: (!companyNameFocus) ? 12 : 14 }}>
+                            Company Name
                         </Text>
                         <TextInput
                             placeholder='Input your full name'
-                            style={{ marginTop: -10, borderBottomWidth: 1, borderRadius: 10, paddingHorizontal: 15, fontFamily: 'Poppins-Regular', borderBottomColor: (!fullNameFocus) ? '#000' : (!errorFullNameField || fullName === '') ? '#505383' : '#E93939', color: (!errorFullNameField || fullName === '') ? '#505383' : '#E93939' }}
+                            style={{ marginTop: -10, borderBottomWidth: 1, borderRadius: 10, paddingHorizontal: 15, fontFamily: 'Poppins-Regular', borderBottomColor: (!companyNameFocus) ? '#000' : (!errorCompanyNameField || companyName === '') ? '#505383' : '#E93939', color: (!errorCompanyNameField || companyName === '') ? '#505383' : '#E93939' }}
                             onChangeText={(text) => {
-                                setFullName(text)
+                                setCompanyName(text)
                             }}
                             onEndEditing={() => {
-                                setFullNameFocus(false)
+                                setCompanyNameFocus(false)
                             }}
                             onFocus={() => {
-                                setFullNameFocus(true)
+                                setCompanyNameFocus(true)
                             }}
-                            value={fullName}
+                            value={companyName}
                         />
-                        {(errorFullNameField && fullName != '') 
+                        {(errorCompanyNameField && companyName != '') 
                             ? <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 12, color: '#E93939', marginTop: 5, marginLeft: 10 }}>
                                 This field can only contains alphabets!
                             </Text>
@@ -139,8 +148,34 @@ const NewCustomerFormPage = () => {
                         }
                     </View>
                     <View style={{ marginTop: 20 }}>
+                        <Text style={{ fontFamily: 'Poppins-Medium', color: (!companyEmailFocus) ? '#000' : (!errorCompanyEmailField || companyEmail === '') ? '#505383' : '#E93939', fontSize: (!companyEmailFocus) ? 12 : 14 }}>
+                            Company Email Address
+                        </Text>
+                        <TextInput
+                            placeholder='Input your email'
+                            style={{ marginTop: -10, borderBottomWidth: 1, borderRadius: 10, paddingHorizontal: 15, fontFamily: 'Poppins-Regular', borderBottomColor: (!companyEmailFocus) ? '#000' : (!errorCompanyEmailField || companyEmail === '') ? '#505383' : '#E93939', color: (!errorCompanyEmailField || companyEmail === '') ? '#505383' : '#E93939' }}
+                            onChangeText={(text) => {
+                                setCompanyEmail(text)
+                            }}
+                            onEndEditing={() => {
+                                setCompanyEmailFocus(false)
+                            }}
+                            onFocus={() => {
+                                setCompanyEmailFocus(true)
+                            }}
+                            value={companyEmail}
+                            keyboardType='email-address'
+                        />
+                        {(errorCompanyEmailField && companyEmail != '') 
+                            ? <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 12, color: '#E93939', marginTop: 5, marginLeft: 10 }}>
+                                This field should be in email format!
+                            </Text>
+                            : null
+                        }
+                    </View>
+                    <View style={{ marginTop: 20 }}>
                         <Text style={{ fontFamily: 'Poppins-Medium', color: (!phoneNumberFocus) ? '#000' : (!errorPhoneNumberField || phoneNumber === '') ? '#505383' : '#E93939', fontSize: (!phoneNumberFocus) ? 12 : 14 }}>
-                            Phone Number
+                           Company Phone Number
                         </Text>
                         <TextInput
                             placeholder='Input phone number'
@@ -165,26 +200,26 @@ const NewCustomerFormPage = () => {
                         }
                     </View>
                     <View style={{ marginTop: 20 }}>
-                        <Text style={{ fontFamily: 'Poppins-Medium', color: (!customerAddressFocus) ? '#000' : '#505383', fontSize: (!customerAddressFocus) ? 12 : 14 }}>
-                            Customer Address
+                        <Text style={{ fontFamily: 'Poppins-Medium', color: (!companyAddressFocus) ? '#000' : '#505383', fontSize: (!companyAddressFocus) ? 12 : 14 }}>
+                            Company Address
                         </Text>
                         <TextInput
                             placeholder='Input your address'
-                            style={{ marginTop: -10, borderBottomWidth: 1, borderRadius: 10, paddingHorizontal: 15, fontFamily: 'Poppins-Regular', borderBottomColor: (!customerAddressFocus) ? '#000' : '#505383', color: '#505383' }}
+                            style={{ marginTop: -10, borderBottomWidth: 1, borderRadius: 10, paddingHorizontal: 15, fontFamily: 'Poppins-Regular', borderBottomColor: (!companyAddressFocus) ? '#000' : '#505383', color: '#505383' }}
                             onChangeText={(text) => {
-                                setCustomerAddress(text)
+                                setCompanyAddress(text)
                             }}
                             onEndEditing={() => {
-                                setCustomerAddressFocus(false)
+                                setCompanyAddressFocus(false)
                             }}
                             onFocus={() => {
-                                setCustomerAddressFocus(true)
+                                setCompanyAddressFocus(true)
                             }}
-                            value={customerAddress}
+                            value={companyAddress}
                         />
                     </View>
                     <View style={{ marginTop: 25 }} >
-                        <TouchableOpacity onPress={() => postCustomer()} disabled={disableSaveButton} style={{ backgroundColor: (disableSaveButton) ? '#CACEDD' : '#505384', padding: 10, paddingHorizontal: 40, borderRadius: 10 }}>
+                        <TouchableOpacity onPress={() => postCompany()} disabled={disableSaveButton} style={{ backgroundColor: (disableSaveButton) ? '#CACEDD' : '#505384', padding: 10, paddingHorizontal: 40, borderRadius: 10 }}>
                             <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                 <MaterialIcons name='save-as' size={24} color={'#FFF'} style={{ marginRight: 5 }} />
                                 <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#FFF' }}>Save</Text>
@@ -199,7 +234,7 @@ const NewCustomerFormPage = () => {
     )
 }
 
-export default NewCustomerFormPage
+export default NewCompanyFormPage
 const styles = StyleSheet.create({
     modalDim: {
         flex: 1,
