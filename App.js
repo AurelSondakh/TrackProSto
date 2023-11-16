@@ -8,18 +8,20 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Octicons from 'react-native-vector-icons/Octicons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 // Contatiners
 import DashboardPage from './App/Containers/DashboardPage'
 import InventoryPage from './App/Containers/InventoryPage'
 import TransactionPage from './App/Containers/TransactionPage'
-import ProfilePage from './App/Containers/ProfilePage'
 import TransactionDetailPage from './App/Containers/TransactionDetailPage'
 import NewInventoryFormPage from './App/Containers/NewInventoryFormPage'
 import EditInventoryFormPage from './App/Containers/EditInventoryFormPage'
 import CustomerCompanyPage from './App/Containers/CustomerCompanyPage'
 import NewCustomerFormPage from './App/Containers/NewCustomerFormPage'
 import NewCompanyFormPage from './App/Containers/NewCompanyFormPage'
+import CustomerDetailPage from './App/Containers/CustomerDetailPage'
+import CreditPage from './App/Containers/CreditPage'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -131,12 +133,12 @@ const TabBar = () => {
           }}
         />
         <Tab.Screen
-          name='ProfilePage' component={ProfilePage} options={{
+          name='CreditPage' component={CreditPage} options={{
             tabBarIcon: ({ focused }) => {
               const colorFocused = focused ? '#505383' : '#ACB1CA'
               return (
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                  <MaterialIcons name='person' color={colorFocused} size={24} />
+                  <FontAwesome name='credit-card-alt' color={colorFocused} size={24} />
                   <Text style={{ fontSize: 10, fontFamily: 'Poppins-SemiBold', color: colorFocused, paddingTop: 4, textAlign: 'center' }}>Credit</Text>
                 </View>
               )
@@ -154,13 +156,14 @@ const StackNavigator = () => (
     <Stack.Screen name='InventoryPage' component={InventoryPage} options={horizontalAnimation} />
     <Stack.Screen name='CustomerCompanyPage' component={CustomerCompanyPage} options={horizontalAnimation} />
     <Stack.Screen name='TransactionPage' component={TransactionPage} options={horizontalAnimation} />
-    <Stack.Screen name='ProfilePage' component={ProfilePage} options={horizontalAnimation} />
+    <Stack.Screen name='CreditPage' component={CreditPage} options={horizontalAnimation} />
     <Stack.Screen name='BottomTabNavigator' component={TabBar} options={horizontalAnimation} />
     <Stack.Screen name='TransactionDetailPage' component={TransactionDetailPage} options={horizontalAnimation} />
     <Stack.Screen name='NewInventoryFormPage' component={NewInventoryFormPage} options={horizontalAnimation} />
     <Stack.Screen name='EditInventoryFormPage' component={EditInventoryFormPage} options={horizontalAnimation} />
     <Stack.Screen name='NewCustomerFormPage' component={NewCustomerFormPage} options={horizontalAnimation} />
     <Stack.Screen name='NewCompanyFormPage' component={NewCompanyFormPage} options={horizontalAnimation} />
+    <Stack.Screen name='CustomerDetailPage' component={CustomerDetailPage} options={horizontalAnimation} />
   </Stack.Navigator>
 )
 

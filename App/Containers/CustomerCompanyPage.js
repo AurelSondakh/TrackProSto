@@ -56,7 +56,7 @@ const CustomerCompanyPage = () => {
     const customerData= [
         {
             "customer_id": "8d73d24a-b398-4a15-a6fb-64db32c6d6b9",
-            "fullname": "customerNew",
+            "fullname": "jane doe",
             "address": "dummyaddress",
             "company_id": "d84c6493-a14e-4bdf-9970-49a00144900f",
             "phone_number": "081239238918",
@@ -68,7 +68,7 @@ const CustomerCompanyPage = () => {
         },
         {
             "customer_id": "b79e46ab-22ad-4be2-b174-de0301807a82",
-            "fullname": "customerNew",
+            "fullname": "jane doe The",
             "address": "dummyaddress",
             "company_id": "d84c6493-a14e-4bdf-9970-49a00144900f",
             "phone_number": "081239238918",

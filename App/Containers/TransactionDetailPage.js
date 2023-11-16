@@ -82,12 +82,12 @@ const TransactionDetailPage = (props) => {
             <View style={{ backgroundColor: '#F1F2FE', borderTopLeftRadius: 50, borderTopRightRadius: 50, flex: 1, marginTop: 35 }}>
                 <View style={{ paddingHorizontal: 30, marginTop: 50 }}>
                     <View style={{ borderBottomWidth: 2, borderBottomColor: '#CACEDD', flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <View>
+                        <View style={{}}>
                             <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 14, color: '#505383' }}>
                                 Invoice Number
                             </Text>
                             <View style={{ flexDirection: 'row', marginBottom: 10, marginTop: -5 }}>
-                                <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 20 }}>
+                                <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 20 ,  maxWidth: width / 1.9}}>
                                     {item?.invoice_number}
                                 </Text>
                                 <View style={{ padding: 0, borderRadius: 10, backgroundColor: item.payment_status === 'unpaid' ? '#ffc300' : '#04AD1F', width: 70, alignItems: 'center', alignSelf: 'center', marginLeft: 10, marginTop: -5 }}>
@@ -95,9 +95,11 @@ const TransactionDetailPage = (props) => {
                                 </View>
                             </View>
                         </View>
-                        <TouchableOpacity style={{ marginTop: 8, marginRight: 10 }}>
-                            <FontAwesome6 name='file-invoice' size={34} color={'#505383'} />
-                        </TouchableOpacity>
+                        <View style={{alignSelf: 'center',  }}>
+                            <TouchableOpacity style={{ marginRight: 10 }}>
+                                <FontAwesome6 name='file-invoice' size={34} color={'#505383'} style={{}} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
                 <ScrollView style={{ paddingHorizontal: 30, marginTop: 10 }}>

@@ -48,7 +48,7 @@ const CustomerList = (props) => {
     }
 
     return(
-        <TouchableOpacity style={{ paddingHorizontal: 15, marginTop: 10 }}>
+        <TouchableOpacity onPress={() => navigation.navigate('CustomerDetailPage', {item})} style={{ paddingHorizontal: 15, marginTop: 10 }}>
             <GestureHandlerRootView>
                 <Swipeable renderRightActions={leftSwipe}>
                     <View style={{ padding: 15, backgroundColor: '#FFF', borderRadius: 10 }}>
