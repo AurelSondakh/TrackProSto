@@ -22,6 +22,10 @@ import NewCustomerFormPage from './App/Containers/NewCustomerFormPage'
 import NewCompanyFormPage from './App/Containers/NewCompanyFormPage'
 import CustomerDetailPage from './App/Containers/CustomerDetailPage'
 import CreditPage from './App/Containers/CreditPage'
+import EditCustomerFormPage from './App/Containers/EditCustomerFormPage'
+import CompanyDetailPage from './App/Containers/CompanyDetailPage'
+import CustomerListByCompanyIdPage from './App/Containers/CustomerListByCompanyIdPage'
+import EditCompanyFormPage from './App/Containers/EditCompanyFormPage'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -164,6 +168,10 @@ const StackNavigator = () => (
     <Stack.Screen name='NewCustomerFormPage' component={NewCustomerFormPage} options={horizontalAnimation} />
     <Stack.Screen name='NewCompanyFormPage' component={NewCompanyFormPage} options={horizontalAnimation} />
     <Stack.Screen name='CustomerDetailPage' component={CustomerDetailPage} options={horizontalAnimation} />
+    <Stack.Screen name='EditCustomerFormPage' component={EditCustomerFormPage} options={horizontalAnimation} />
+    <Stack.Screen name='CompanyDetailPage' component={CompanyDetailPage} options={horizontalAnimation} />
+    <Stack.Screen name='CustomerListByCompanyIdPage' component={CustomerListByCompanyIdPage} options={horizontalAnimation} />
+    <Stack.Screen name='EditCompanyFormPage' component={EditCompanyFormPage} options={horizontalAnimation} />
   </Stack.Navigator>
 )
 

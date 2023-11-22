@@ -21,6 +21,8 @@ const CustomerList = (props) => {
     // "updated_by": "",
     // "debt": 0
 
+    console.log(props, swipe)
+    let swipe = props?.swipe
     let item = props?.item
     const navigation = useNavigation()
 
@@ -50,7 +52,7 @@ const CustomerList = (props) => {
     return(
         <TouchableOpacity onPress={() => navigation.navigate('CustomerDetailPage', {item})} style={{ paddingHorizontal: 15, marginTop: 10 }}>
             <GestureHandlerRootView>
-                <Swipeable renderRightActions={leftSwipe}>
+                <Swipeable renderRightActions={(swipe) ? leftSwipe : null}>
                     <View style={{ padding: 15, backgroundColor: '#FFF', borderRadius: 10 }}>
                          <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14, color: '#505383' }}>{capitalizeFirstLetter(item.fullname)}</Text>
                          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>

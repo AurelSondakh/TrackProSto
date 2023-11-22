@@ -139,7 +139,7 @@ const CustomerDetailPage = (props) => {
                 </View>
             </View>
             <View style={{ marginHorizontal: 50 }}>
-                <TouchableOpacity onPress={() => {}} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => navigation.navigate('EditCustomerFormPage', {customerDetail})} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
                     <FontAwesome name="edit" color={'#FFF'} size={18} style={{ marginRight: 10, alignSelf: 'center' }} />
                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#FFF' }}>
                         Edit Customer
