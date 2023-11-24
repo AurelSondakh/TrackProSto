@@ -86,7 +86,7 @@ const CompanyDetailPage = () => {
                     </TouchableOpacity>
                     </View>
                     <View style={{}}>
-                    <TouchableOpacity onPress={() => navigation.navigate('EditCompanyFormPage')} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
+                    <TouchableOpacity onPress={() => navigation.navigate('EditCompanyFormPage', {companyDetail})} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
                         <FontAwesome name="edit" color={'#FFF'} size={18} style={{ marginRight: 10, alignSelf: 'center' }} />
                         <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#FFF' }}>
                             Edit Company
