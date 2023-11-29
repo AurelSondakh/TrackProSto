@@ -73,7 +73,7 @@ const EditCustomerFormPage = (props) => {
                     <SafeAreaView style={styles.modalDim}>
                         <View style={[styles.modalBG, {marginVertical: height / 3.5}]}>
                             <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
-                                <Image source={require('../assets/correctModal.png')} style={{ width: 128, height: 128, alignSelf: 'center' }} />
+                                <Image source={require('../../../assets/correctModal.png')} style={{ width: 128, height: 128, alignSelf: 'center' }} />
                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center' }}>Customer has been changed successfully</Text>
                                 <TouchableOpacity onPress={() => {setShowSuccessModal(false); navigation.goBack()}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
@@ -95,7 +95,7 @@ const EditCustomerFormPage = (props) => {
                     <SafeAreaView style={styles.modalDim}>
                         <View style={styles.modalBG}>
                             <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
-                                <Image source={require('../assets/failedModal.png')} style={{ width: 96, height: 96, alignSelf: 'center' }} />
+                                <Image source={require('../../../assets/failedModal.png')} style={{ width: 96, height: 96, alignSelf: 'center' }} />
                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center', marginTop: 20 }}>Customer changes has failed, please recheck your field!</Text>
                                 <TouchableOpacity onPress={() => {setShowFailedModal(false)}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>

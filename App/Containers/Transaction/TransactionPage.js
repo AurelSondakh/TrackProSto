@@ -10,7 +10,7 @@ import moment from 'moment/moment'
 import { enableScreens } from 'react-native-screens'
 
 // Component
-import TransactionList from "../Components/TransactionList"
+import TransactionList from "../../Components/TransactionList"
 
 enableScreens()
 
@@ -24,7 +24,7 @@ const TransactionPage = () => {
             "invoice_number": "MJP-20231101-0002",
             "customer_id": "1fa4b6d6-7561-4803-9d93-6e39563ce759",
             "name": "customerNew",
-            "email": "customerNew@gmail.com",
+            "email": "companyNew@gmail.com",
             "address": "dummyaddress",
             "company": "dummyname",
             "phone_number": "081239238918",
@@ -246,7 +246,7 @@ const TransactionPage = () => {
             </View>
             <View style={{ marginHorizontal: 15, marginTop: 20, paddingBottom: 8 }}>
                 <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14 }}>Transaction Overview</Text>
-                <TouchableOpacity style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => navigation.navigate('NewTransactionFormPage')} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
                     <AntDesign name="pluscircle" color={'#FFF'} size={18} style={{ marginRight: 10,alignSelf: 'center' }} />
                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF', alignSelf: 'center' }}>
                         Add New Transaction

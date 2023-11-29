@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react'
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
-import CustomerList from '../Components/CustomerList'
+import CustomerList from '../../../Components/CustomerList'
 import { useNavigation } from '@react-navigation/native'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 

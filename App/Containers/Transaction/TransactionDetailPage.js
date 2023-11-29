@@ -125,19 +125,19 @@ const TransactionDetailPage = (props) => {
                                     <Text style={[styles.value, {textAlign: 'right'}]}>{item?.phone_number}</Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 }}>
-                                <View>
-                                    <Text style={styles.subTitle}>
-                                        Customer Email
-                                    </Text>
-                                    <Text style={styles.value}>{item?.email}</Text>
-                                </View>
-                            </View>
                             <View>
                                 <Text style={[styles.subTitle]}>
                                     Company Name
                                 </Text>
                                 <Text style={[styles.value]}>{capitalizeFirstLetter(item?.company)}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 }}>
+                                <View>
+                                    <Text style={styles.subTitle}>
+                                        Company Email
+                                    </Text>
+                                    <Text style={styles.value}>{item?.email}</Text>
+                                </View>
                             </View>
                             <View>
                                 <Text style={[styles.subTitle]}>

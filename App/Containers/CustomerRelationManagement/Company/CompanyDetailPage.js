@@ -5,8 +5,6 @@ import { useNavigation } from '@react-navigation/native'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-import CustomerList from '../Components/CustomerList'
-
 const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
 

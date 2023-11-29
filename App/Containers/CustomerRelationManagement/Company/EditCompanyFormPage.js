@@ -1,17 +1,17 @@
 /* eslint-disable prettier/prettier */
-import React, {useState, useEffect} from 'react'
-import { View, Text, TouchableOpacity, TextInput, SafeAreaView, Modal, Image, StyleSheet, Dimensions } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, TouchableOpacity, Dimensions, TextInput, Modal, SafeAreaView, Image, StyleSheet } from 'react-native'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { useNavigation } from '@react-navigation/native'
 
 const height = Dimensions.get('screen').height
 const width = Dimensions.get('screen').width
 
-const NewCompanyFormPage = () => {
+const EditCompanyFormPage = (props) => {
 
+    let item = props?.route?.params?.companyDetail
     const navigation = useNavigation()
-
     const [companyName, setCompanyName] = useState('')
     const [companyNameFocus, setCompanyNameFocus] = useState(false)
     const [errorCompanyNameField, setErrorCompanyNameField] = useState(false)
@@ -27,14 +27,15 @@ const NewCompanyFormPage = () => {
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showFailedModal, setShowFailedModal] = useState(false)
 
-    const postCompany = () => {
+    const editCompany = () => {
         let data = {
+            company_id: 'thisiscompanyid',
             company_name: companyName,
             address: companyAddress,
             email: companyEmail,
             phone_number: phoneNumber
         }
-        console.log(`PostCompany: ${data}`)
+        console.log(`EditCompany: ${data}`)
         let response = {
             statuscode: 400,
         }
@@ -43,6 +44,13 @@ const NewCompanyFormPage = () => {
             setShowSuccessModal(true)
         } else setShowFailedModal(true)
     }
+
+    useEffect(() => {
+        setCompanyName(item?.company_name)
+        setCompanyEmail(item?.email)
+        setPhoneNumber(item?.phone_number)
+        setCompanyAddress(item?.address)
+    }, [item])
 
     useEffect(() => {
         if(companyName !== '' && companyEmail !== '' && phoneNumber !== '' && companyAddress !== '' && !errorCompanyNameField && !errorCompanyEmailField && !errorPhoneNumberField) {
@@ -75,7 +83,7 @@ const NewCompanyFormPage = () => {
                     <SafeAreaView style={styles.modalDim}>
                         <View style={[styles.modalBG, {marginVertical: height / 3.5}]}>
                             <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
-                                <Image source={require('../assets/correctModal.png')} style={{ width: 128, height: 128, alignSelf: 'center' }} />
+                                <Image source={require('../../../assets/correctModal.png')} style={{ width: 128, height: 128, alignSelf: 'center' }} />
                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center' }}>Company has been added successfully</Text>
                                 <TouchableOpacity onPress={() => {setShowSuccessModal(false); navigation.goBack()}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
@@ -97,7 +105,7 @@ const NewCompanyFormPage = () => {
                     <SafeAreaView style={styles.modalDim}>
                         <View style={styles.modalBG}>
                             <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
-                                <Image source={require('../assets/failedModal.png')} style={{ width: 96, height: 96, alignSelf: 'center' }} />
+                                <Image source={require('../../../assets/failedModal.png')} style={{ width: 96, height: 96, alignSelf: 'center' }} />
                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center', marginTop: 20 }}>Company addition has failed, please recheck your field!</Text>
                                 <TouchableOpacity onPress={() => {setShowFailedModal(false)}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
@@ -118,7 +126,7 @@ const NewCompanyFormPage = () => {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <IonIcons name="arrow-back" size={28} color={'#F1F2FE'} style={{ marginTop: 2 }} />
                 </TouchableOpacity>
-                <Text style={{ fontFamily: 'Poppins-SemiBold', color: '#F1F2FE', fontSize: 20, marginLeft: 10 }}>Add New Company</Text>
+                <Text style={{ fontFamily: 'Poppins-SemiBold', color: '#F1F2FE', fontSize: 20, marginLeft: 10 }}>Edit Customer</Text>
             </View>
             <View style={{ flex: 1, backgroundColor: '#F1F2FE', marginTop: 35, borderTopLeftRadius: 50, borderTopRightRadius: 50, }}>
                 <View style={{ paddingHorizontal: 30, marginTop: 50 }}>
@@ -219,7 +227,7 @@ const NewCompanyFormPage = () => {
                         />
                     </View>
                     <View style={{ marginTop: 25 }} >
-                        <TouchableOpacity onPress={() => postCompany()} disabled={disableSaveButton} style={{ backgroundColor: (disableSaveButton) ? '#CACEDD' : '#505384', padding: 10, paddingHorizontal: 40, borderRadius: 10 }}>
+                        <TouchableOpacity onPress={() => editCompany()} disabled={disableSaveButton} style={{ backgroundColor: (disableSaveButton) ? '#CACEDD' : '#505384', padding: 10, paddingHorizontal: 40, borderRadius: 10 }}>
                             <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                 <MaterialIcons name='save-as' size={24} color={'#FFF'} style={{ marginRight: 5 }} />
                                 <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#FFF' }}>Save</Text>
@@ -234,7 +242,7 @@ const NewCompanyFormPage = () => {
     )
 }
 
-export default NewCompanyFormPage
+export default EditCompanyFormPage
 const styles = StyleSheet.create({
     modalDim: {
         flex: 1,

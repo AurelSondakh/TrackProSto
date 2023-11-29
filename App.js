@@ -11,21 +11,22 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 // Contatiners
-import DashboardPage from './App/Containers/DashboardPage'
-import InventoryPage from './App/Containers/InventoryPage'
-import TransactionPage from './App/Containers/TransactionPage'
-import TransactionDetailPage from './App/Containers/TransactionDetailPage'
-import NewInventoryFormPage from './App/Containers/NewInventoryFormPage'
-import EditInventoryFormPage from './App/Containers/EditInventoryFormPage'
-import CustomerCompanyPage from './App/Containers/CustomerCompanyPage'
-import NewCustomerFormPage from './App/Containers/NewCustomerFormPage'
-import NewCompanyFormPage from './App/Containers/NewCompanyFormPage'
-import CustomerDetailPage from './App/Containers/CustomerDetailPage'
-import CreditPage from './App/Containers/CreditPage'
-import EditCustomerFormPage from './App/Containers/EditCustomerFormPage'
-import CompanyDetailPage from './App/Containers/CompanyDetailPage'
-import CustomerListByCompanyIdPage from './App/Containers/CustomerListByCompanyIdPage'
-import EditCompanyFormPage from './App/Containers/EditCompanyFormPage'
+import DashboardPage from './App/Containers/Dashboard/DashboardPage'
+import InventoryPage from './App/Containers/Inventory/InventoryPage'
+import TransactionPage from './App/Containers/Transaction/TransactionPage'
+import TransactionDetailPage from './App/Containers/Transaction/TransactionDetailPage'
+import NewInventoryFormPage from './App/Containers/Inventory/NewInventoryFormPage'
+import EditInventoryFormPage from './App/Containers/Inventory/EditInventoryFormPage'
+import CustomerCompanyPage from './App/Containers/CustomerRelationManagement/CustomerCompanyPage'
+import NewCustomerFormPage from './App/Containers/CustomerRelationManagement/Customer/NewCustomerFormPage'
+import NewCompanyFormPage from './App/Containers/CustomerRelationManagement/Company/NewCompanyFormPage'
+import CustomerDetailPage from './App/Containers/CustomerRelationManagement/Customer/CustomerDetailPage'
+import CreditPage from './App/Containers/Credit/CreditPage'
+import EditCustomerFormPage from './App/Containers/CustomerRelationManagement/Customer/EditCustomerFormPage'
+import CompanyDetailPage from './App/Containers/CustomerRelationManagement/Company/CompanyDetailPage'
+import CustomerListByCompanyIdPage from './App/Containers/CustomerRelationManagement/Company/CustomerListByCompanyIdPage'
+import EditCompanyFormPage from './App/Containers/CustomerRelationManagement/Company/EditCompanyFormPage'
+import NewTransactionFormPage from './App/Containers/Transaction/NewTransactionFormPage'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -172,6 +173,7 @@ const StackNavigator = () => (
     <Stack.Screen name='CompanyDetailPage' component={CompanyDetailPage} options={horizontalAnimation} />
     <Stack.Screen name='CustomerListByCompanyIdPage' component={CustomerListByCompanyIdPage} options={horizontalAnimation} />
     <Stack.Screen name='EditCompanyFormPage' component={EditCompanyFormPage} options={horizontalAnimation} />
+    <Stack.Screen name='NewTransactionFormPage' component={NewTransactionFormPage} options={horizontalAnimation} />
   </Stack.Navigator>
 )
 

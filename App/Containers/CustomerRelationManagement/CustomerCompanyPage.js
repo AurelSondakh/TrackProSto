@@ -7,8 +7,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 // Components
-import CompanyList from '../Components/CompanyList'
-import CustomerList from '../Components/CustomerList'
+import CompanyList from '../../Components/CompanyList'
+import CustomerList from '../../Components/CustomerList'
 
 const width = Dimensions.get('screen').width
 
