@@ -27,6 +27,7 @@ import CompanyDetailPage from './App/Containers/CustomerRelationManagement/Compa
 import CustomerListByCompanyIdPage from './App/Containers/CustomerRelationManagement/Company/CustomerListByCompanyIdPage'
 import EditCompanyFormPage from './App/Containers/CustomerRelationManagement/Company/EditCompanyFormPage'
 import NewTransactionFormPage from './App/Containers/Transaction/NewTransactionFormPage'
+import NewCreditPaymentFormPage from './App/Containers/Transaction/NewCreditPaymentFormPage'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -174,6 +175,7 @@ const StackNavigator = () => (
     <Stack.Screen name='CustomerListByCompanyIdPage' component={CustomerListByCompanyIdPage} options={horizontalAnimation} />
     <Stack.Screen name='EditCompanyFormPage' component={EditCompanyFormPage} options={horizontalAnimation} />
     <Stack.Screen name='NewTransactionFormPage' component={NewTransactionFormPage} options={horizontalAnimation} />
+    <Stack.Screen name='NewCreditPaymentFormPage' component={NewCreditPaymentFormPage} options={horizontalAnimation} />  
   </Stack.Navigator>
 )
 

@@ -37,7 +37,7 @@ const TransactionPage = () => {
             "updated_at": "2023-11-01T10:40:34.789617Z",
             "created_by": "admin",
             "updated_by": "admin",
-            "debt": 100000,
+            "debt": 10,
             "transaction_details": [
                 {
                     "id": "b0bfc840-d79d-4a89-a3e7-9b4f7aa9a386",

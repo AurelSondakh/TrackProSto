@@ -6,6 +6,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons'
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from "@react-navigation/native"
 
 const width = Dimensions.get('screen').width
@@ -19,6 +20,29 @@ const TransactionDetailPage = (props) => {
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
+
+    const paymentListData = [
+        {
+            "id": "0e065bd0-28ac-4113-8e65-92b8d6c867b7",
+            "inv_number": "INV-20231106-0001",
+            "payment_date": "2023-11-06T00:00:00Z",
+            "amount": 460000,
+            "created_at": "2023-11-06T13:52:59.062928Z",
+            "created_by": "babyacu",
+            "updated_at": "2023-11-06T13:52:59.062928Z",
+            "updated_by": "babyacu"
+        },
+        {
+            "id": "0e065bd0-28ac-4113-8e65-92b8d6c867b78",
+            "inv_number": "INV-20231106-0001",
+            "payment_date": "2023-11-07T00:00:00Z",
+            "amount": 660000,
+            "created_at": "2023-11-06T13:52:59.062928Z",
+            "created_by": "babyacu",
+            "updated_at": "2023-11-06T13:52:59.062928Z",
+            "updated_by": "babyacu"
+        }
+    ]
 
     const numberWithCommas = (number) => {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -34,7 +58,7 @@ const TransactionDetailPage = (props) => {
         return formattedDate
     }
 
-    const getTransactionDetail = (item) => {
+    const getItemDetail = (item) => {
         let transactionArray = item?.transaction_details;
         return transactionArray.map((transactionItem, index) => (
             <View style={{ marginHorizontal: 15, marginTop: 5, borderBottomWidth: index !== transactionArray.length - 1 ? 2 : 0, borderBottomColor: '#CACEDD' }} key={transactionItem.id}>
@@ -65,6 +89,39 @@ const TransactionDetailPage = (props) => {
                             Total
                         </Text>
                         <Text style={[styles.value, {textAlign: 'right'}]}>IDR {numberWithCommas(transactionItem?.total)}</Text>
+                    </View>
+                </View>
+            </View>
+        ));
+    }
+
+    const setDate = (paymentItem) => {
+        let paymentDate = new Date(paymentItem.payment_date)
+        let formattedDate = paymentDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+        });
+        return formattedDate
+    }
+
+    const getPaymentDetail = (item) => {
+        console.log(item)
+        return paymentListData.map((paymentItem, index) => (
+            <View style={{ marginHorizontal: 15, marginTop: 5, borderBottomWidth: index !== paymentListData.length - 1 ? 2 : 0, borderBottomColor: '#CACEDD' }} key={paymentItem.id}>
+                {console.log(paymentItem)}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 }}>
+                    <View>
+                        <Text style={styles.subTitle}>
+                            Payment Date
+                        </Text>
+                        <Text style={styles.value}>{setDate(paymentItem)}</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.subTitle}>
+                            Payment Amount
+                        </Text>
+                        <Text style={styles.value}>IDR {numberWithCommas(paymentItem?.amount)}</Text>
                     </View>
                 </View>
             </View>
@@ -150,16 +207,37 @@ const TransactionDetailPage = (props) => {
                     <View style={{ borderBottomWidth: 2, borderBottomColor: '#CACEDD', paddingBottom: 5 }}>
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#505383' }}>
-                                Transaction Detail
+                                Item Detail
                             </Text>
                             <MaterialIcons name="payments" size={24} color={'#505383'} style={{ marginLeft: 5, marginTop: -2 }} />
                         </View>
-                        {getTransactionDetail(item)}
+                        {getItemDetail(item)}
                     </View>
                     <View style={{ borderBottomWidth: 2, borderBottomColor: '#CACEDD', paddingBottom: 5 }}>
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#505383' }}>
-                                Invoice Detail
+                                Payment Detail
+                            </Text>
+                            <MaterialIcons name="payments" size={24} color={'#505383'} style={{ marginLeft: 5, marginTop: -2 }} />
+                        </View>
+                        {getPaymentDetail(item)}
+                        <View style={{ marginBottom: 5, marginHorizontal: 10 }}>
+                            <TouchableOpacity disabled={(item.debt) !== 0 ? false : true} onPress={() => navigation.navigate('NewCreditPaymentFormPage')} style={{ padding: 8, backgroundColor: (item.debt) !== 0 ? '#505383' : '#04AD1F', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
+                                {(item.debt !== 0)
+                                    ? <><AntDesign name="pluscircle" color={'#FFF'} size={18} style={{ marginRight: 10, alignSelf: 'center' }} /><Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF', alignSelf: 'center' }}>
+                                        Add New Credit Payment
+                                    </Text></>
+                                    : <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF', alignSelf: 'center' }}>
+                                        Settled
+                                    </Text>
+                                }
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={{ borderBottomWidth: 2, borderBottomColor: '#CACEDD', paddingBottom: 5 }}>
+                        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                            <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#505383' }}>
+                                Transaction Detail
                             </Text>
                             <MaterialCommunityIcon name="inbox-full" size={24} color={'#505383'} style={{ marginLeft: 5, marginTop: -2 }} />
                         </View>
