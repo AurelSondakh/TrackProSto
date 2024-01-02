@@ -28,6 +28,7 @@ import CustomerListByCompanyIdPage from './App/Containers/CustomerRelationManage
 import EditCompanyFormPage from './App/Containers/CustomerRelationManagement/Company/EditCompanyFormPage'
 import NewTransactionFormPage from './App/Containers/Transaction/NewTransactionFormPage'
 import NewCreditPaymentFormPage from './App/Containers/Transaction/NewCreditPaymentFormPage'
+import LoginPage from './App/Containers/Login/LoginPage'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -138,7 +139,7 @@ const TabBar = () => {
             }
           }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name='CreditPage' component={CreditPage} options={{
             tabBarIcon: ({ focused }) => {
               const colorFocused = focused ? '#505383' : '#ACB1CA'
@@ -150,14 +151,14 @@ const TabBar = () => {
               )
             }
           }}
-        />
+        /> */}
       </Tab.Navigator>
     </>
   )
 }
 
 const StackNavigator = () => (
-  <Stack.Navigator initialRouteName='BottomTabNavigator' headerMode='none' >
+  <Stack.Navigator initialRouteName='LoginPage' headerMode='none' >
     <Stack.Screen name='DashboardPage' component={DashboardPage} options={horizontalAnimation} />
     <Stack.Screen name='InventoryPage' component={InventoryPage} options={horizontalAnimation} />
     <Stack.Screen name='CustomerCompanyPage' component={CustomerCompanyPage} options={horizontalAnimation} />
@@ -176,6 +177,7 @@ const StackNavigator = () => (
     <Stack.Screen name='EditCompanyFormPage' component={EditCompanyFormPage} options={horizontalAnimation} />
     <Stack.Screen name='NewTransactionFormPage' component={NewTransactionFormPage} options={horizontalAnimation} />
     <Stack.Screen name='NewCreditPaymentFormPage' component={NewCreditPaymentFormPage} options={horizontalAnimation} />  
+    <Stack.Screen name='LoginPage' component={LoginPage} options={horizontalAnimation} />
   </Stack.Navigator>
 )
 
