@@ -1,7 +1,10 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import {useDispatch, useSelector} from 'react-redux';
 import { View, Text, StatusBar, TextInput, TouchableOpacity, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
+import { ActionUtility } from '../../Redux/Actions/Utility'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginPage = () => {
 
@@ -11,6 +14,12 @@ const LoginPage = () => {
     const [password, setPassword] = useState('')
     const [passwordFocus, setPasswordFocus] = useState(false)
 
+    //Redux
+    const {
+        loginData
+    } = useSelector((state) => state.utility);
+    const dispatch = useDispatch();
+
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
           StatusBar.setBackgroundColor('#505383');
@@ -18,6 +27,25 @@ const LoginPage = () => {
         });
         return unsubscribe;
     }, [navigation]);
+
+    const validateLoginCredential = () => {
+        let loginCredential = {
+            username: username,
+            password: password
+        }
+        dispatch(
+            ActionUtility.LoginTP(
+                loginCredential
+            ),
+        );
+        if(loginData?.statuscode === 200) {
+            AsyncStorage.setItem('loginToken', loginData?.data)
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'BottomTabNavigator' }]
+            })
+        }
+    }
 
     return (
         <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
@@ -61,7 +89,7 @@ const LoginPage = () => {
                         value={password}
                     />
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('BottomTabNavigator')} style={{ padding: 10, borderWidth: 1, backgroundColor: '#505383', borderRadius: 50, marginTop: 30 }}>
+                <TouchableOpacity onPress={() => validateLoginCredential()} style={{ padding: 10, borderWidth: 1, backgroundColor: '#505383', borderRadius: 50, marginTop: 30 }}>
                     <Text style={{ fontFamily: 'Poppins-Bold', color: '#FFF', fontSize: 14, textAlign: 'center' }}>
                         LOGIN
                     </Text>
