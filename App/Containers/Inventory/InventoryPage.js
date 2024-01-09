@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StatusBar, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import { View, Text, FlatList, StatusBar, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -8,6 +9,8 @@ import { useNavigation } from '@react-navigation/native';
 import moment from 'moment/moment';
 import { enableScreens } from 'react-native-screens';
 import InventoryList from '../../Components/InventoryList';
+import { ActionMeat } from '../../Redux/Actions/Meats'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 enableScreens();
 
@@ -157,7 +160,8 @@ const InventoryPage = () => {
         ],
     };
 
-    const [totalStockInventory, setTotalStockInventory] = useState(0);
+    const { meatList } = useSelector((state) => state.meat);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -166,6 +170,25 @@ const InventoryPage = () => {
         });
         return unsubscribe;
     }, [navigation]);
+
+    useEffect(() => {
+        const getLoginToken = async () => {
+            try {
+              const loginToken = await AsyncStorage.getItem('loginToken');
+              if (loginToken) {
+                let pagination = 1
+                dispatch(
+                    ActionMeat.GetAllMeats(
+                       loginToken, pagination
+                    ),
+                );
+              }
+            } catch (error) {
+              console.log('getLoginTokenError: ', error);
+            }
+        };
+        getLoginToken()
+    }, [])
 
     return (
         <View style={styles.container}>
@@ -200,10 +223,9 @@ const InventoryPage = () => {
             <FlatList
                 style={{ marginBottom: 70 }}
                 nestedScrollEnabled
-                data={invenData?.data}
-                renderItem={({item}) => <InventoryList item={item} />}
-                keyExtractor={item => item.id}
-            />
+                data={meatList?.data?.meats}
+                renderItem={({ item }) => <InventoryList item={item} />}
+                keyExtractor={(item) => item.id} />
         </View>
     );
 };

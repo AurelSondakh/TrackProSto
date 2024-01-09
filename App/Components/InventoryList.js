@@ -10,7 +10,6 @@ import { useNavigation } from '@react-navigation/native'
 const width = Dimensions.get('screen').width
 
 const InventoryList = ({item}) => {
-
     const navigation = useNavigation()
     const [showInventoryDetail, setShowInventoryDetail] = useState(false)
 

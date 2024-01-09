@@ -78,7 +78,6 @@ const App = () => {
     const checkLoginStatus = async () => {
       try {
         const loginToken = await AsyncStorage.getItem('loginToken');
-        console.log(loginToken)
         if (loginToken) {
           if (isTokenExpired(loginToken)) {
             AsyncStorage.clear()
