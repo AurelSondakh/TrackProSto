@@ -2,32 +2,35 @@
 import { URL_MEATS } from "../../../Configs/GlobalUrl"
 import * as ActionTypes from '../../Constants/Types'
 
-export const GetAllMeats = (loginToken, pagination) => {
+export const AddMeats = (loginToken, data) => {
     return dispatch => {
        dispatch({
-           type: ActionTypes.GET_ALL_MEATS_REQUEST
+           type: ActionTypes.ADD_MEATS_REQUEST
        })
-       fetch(`${URL_MEATS}?page=${pagination}`, {
-           method: "GET",
-           redirect: "follow",
-           headers: {
+       fetch(URL_MEATS, {
+        method: "POST",
+        headers: {
+            Accept: '*/*',
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${loginToken}`
-           }
-       }).then(response => {
+        },
+        body: JSON.stringify(data),
+        redirect: "follow"
+    }).then(response => {
            return response.json()
        }).then(data => {
-           console.log("GET_ALL_MEATS: ", data);
+           console.log("ADD_MEATS: ", data);
            if(data.statuscode === 400) {
                throw new Error("Bad Request")
            }
            dispatch({
-               type: ActionTypes.GET_ALL_MEATS_SUCCESS,
+               type: ActionTypes.ADD_MEATS_SUCCESS,
                payload: data
            })
        }).catch(data => {
            console.log("ERROR", data.message)
            dispatch({
-               type: ActionTypes.GET_ALL_MEATS_FAILURE,
+               type: ActionTypes.ADD_MEATS_FAILURE,
                error: data.message,
            })
        })

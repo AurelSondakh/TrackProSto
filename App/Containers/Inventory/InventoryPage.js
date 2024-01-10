@@ -171,24 +171,25 @@ const InventoryPage = () => {
         return unsubscribe;
     }, [navigation]);
 
+    const getInventoryList = async () => {
+        try {
+          const loginToken = await AsyncStorage.getItem('loginToken');
+          if (loginToken) {
+            let pagination = 2
+            dispatch(
+                ActionMeat.GetAllMeats(
+                   loginToken, pagination
+                ),
+            );
+          }
+        } catch (error) {
+          console.log('getLoginTokenError: ', error);
+        }
+    };
+
     useEffect(() => {
-        const getLoginToken = async () => {
-            try {
-              const loginToken = await AsyncStorage.getItem('loginToken');
-              if (loginToken) {
-                let pagination = 1
-                dispatch(
-                    ActionMeat.GetAllMeats(
-                       loginToken, pagination
-                    ),
-                );
-              }
-            } catch (error) {
-              console.log('getLoginTokenError: ', error);
-            }
-        };
-        getLoginToken()
-    }, [])
+        getInventoryList()
+    }, [dispatch, navigation])
 
     return (
         <View style={styles.container}>

@@ -2,6 +2,10 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, SafeAreaView, TextInput, Image, Modal, StyleSheet, Dimensions } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import {useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { ActionMeat } from '../../Redux/Actions/Meats'
+import { ActionUtility } from '../../Redux/Actions/Utility';
 
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -21,29 +25,54 @@ const NewInventoryFormPage = () => {
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showFailedModal, setShowFailedModal] = useState(false)
 
+    const { addMeatResponse } = useSelector((state) => state.meat);
+    const dispatch = useDispatch();
+
     useEffect(() => {
         const regexMeatName = /^(?!\s+$)[a-zA-Z\s]+$/
         if(regexMeatName.test(meatName)) setErrorMeatNameField(false)
         else setErrorMeatNameField(true)
-        if(meatName !== '' && !errorMeatNameField && meatStock !=='') setDisableSaveButton(false)
+        if(meatName !== '' && !errorMeatNameField && meatStock !=='' ) setDisableSaveButton(false)
         else setDisableSaveButton(true)
     }, [meatName, meatStock, errorMeatNameField])
 
-    const postMeat = () => {
-        let data = {
-            name: meatName,
-            stock: meatStock,
-            price: 1
+    const postMeat = async () => {
+        try {
+          const loginToken = await AsyncStorage.getItem('loginToken');
+          if (loginToken) {
+            let bodyReq = {
+                name: meatName,
+                stock: Number(meatStock)
+            }
+            dispatch(
+                ActionMeat.AddMeats(
+                   loginToken, bodyReq
+                ),
+            );
+          }
+        } catch (error) {
+          console.log('getLoginTokenError: ', error);
         }
-        console.log(`PostMeat: ${data}`)
-        let response = {
-            statuscode: 400,
-        }
+    };
 
-        if(response.statuscode === 200) {
-            setShowSuccessModal(true)
-        } else setShowFailedModal(true)
-    }
+    useEffect(() => {
+        console.log(addMeatResponse, 'addMeatResponse')
+        if('statuscode' in addMeatResponse) {
+            if(addMeatResponse.statuscode === 201) {
+                setMeatName('')
+                setMeatStock('')
+                setMeatNameFocus(false)
+                setMeatStockFocus(false)
+                setShowSuccessModal(true)
+                setErrorMeatNameField(false)
+                setDisableSaveButton(true)
+                dispatch(ActionUtility.ResetDataAddMeatResponse())
+            } else {
+                console.log(addMeatResponse)
+                setShowFailedModal(true)
+            }
+        }
+    }, [addMeatResponse, dispatch])
 
     const successModal = () => {
         return (
@@ -54,7 +83,7 @@ const NewInventoryFormPage = () => {
                             <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
                                 <Image source={require('../../assets/correctModal.png')} style={{ width: 128, height: 128, alignSelf: 'center' }} />
                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center' }}>Inventory has been added successfully</Text>
-                                <TouchableOpacity onPress={() => {setShowSuccessModal(false); navigation.goBack()}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
+                                <TouchableOpacity onPress={() => {setShowSuccessModal(false); navigation.navigate('InventoryPage')}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
                                         Close
                                     </Text>

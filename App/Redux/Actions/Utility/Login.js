@@ -19,18 +19,18 @@ export const LoginTP = (data) => {
            return response.json()
        }).then(data => {
            console.log("LOGIN: ", data);
-           if(data.status === 400) {
+           if(data.statuscode === 400) {
                throw new Error("Bad Request")
            }
            dispatch({
                type: ActionTypes.LOGIN_SUCCESS,
                payload: data
            })
-       }).catch(message => {
-           console.log("ERROR", message)
+       }).catch(data => {
+           console.log("ERROR", data.message)
            dispatch({
                type: ActionTypes.LOGIN_FAILURE,
-               error: message,
+               error: data.message,
            })
        })
    }
