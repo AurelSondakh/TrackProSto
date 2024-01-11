@@ -11,6 +11,7 @@ import { enableScreens } from 'react-native-screens';
 import InventoryList from '../../Components/InventoryList';
 import { ActionMeat } from '../../Redux/Actions/Meats'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Spinner from 'react-native-loading-spinner-overlay';
 
 enableScreens();
 
@@ -160,7 +161,7 @@ const InventoryPage = () => {
         ],
     };
 
-    const { meatList } = useSelector((state) => state.meat);
+    const { meatList, loadingGetMeatList } = useSelector((state) => state.meat);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -175,7 +176,7 @@ const InventoryPage = () => {
         try {
           const loginToken = await AsyncStorage.getItem('loginToken');
           if (loginToken) {
-            let pagination = 2
+            let pagination = 3
             dispatch(
                 ActionMeat.GetAllMeats(
                    loginToken, pagination
@@ -227,6 +228,11 @@ const InventoryPage = () => {
                 data={meatList?.data?.meats}
                 renderItem={({ item }) => <InventoryList item={item} />}
                 keyExtractor={(item) => item.id} />
+            <Spinner
+                visible={loadingGetMeatList}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+            />
         </View>
     );
 };

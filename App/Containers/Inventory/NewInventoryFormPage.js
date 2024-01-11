@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ActionMeat } from '../../Redux/Actions/Meats'
 import { ActionUtility } from '../../Redux/Actions/Utility';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -25,7 +26,7 @@ const NewInventoryFormPage = () => {
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showFailedModal, setShowFailedModal] = useState(false)
 
-    const { addMeatResponse } = useSelector((state) => state.meat);
+    const { addMeatResponse, loadingAddMeat } = useSelector((state) => state.meat);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -185,6 +186,11 @@ const NewInventoryFormPage = () => {
                 {(showFailedModal) ? failedModal() : null}
                 {(showSuccessModal) ? successModal() : null}
             </View>
+            <Spinner
+                visible={loadingAddMeat}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+            />
         </View>
     )
 }
