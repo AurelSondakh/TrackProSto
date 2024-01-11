@@ -26,7 +26,7 @@ const NewInventoryFormPage = () => {
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showFailedModal, setShowFailedModal] = useState(false)
 
-    const { addMeatResponse, loadingAddMeat } = useSelector((state) => state.meat);
+    const { addMeatResponse, meatSpinner } = useSelector((state) => state.meat);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -84,7 +84,7 @@ const NewInventoryFormPage = () => {
                             <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
                                 <Image source={require('../../assets/correctModal.png')} style={{ width: 128, height: 128, alignSelf: 'center' }} />
                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center' }}>Inventory has been added successfully</Text>
-                                <TouchableOpacity onPress={() => {setShowSuccessModal(false); navigation.navigate('InventoryPage')}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
+                                <TouchableOpacity onPress={() => {setShowSuccessModal(false); navigation.navigate('BottomTabNavigator')}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
                                         Close
                                     </Text>
@@ -105,7 +105,7 @@ const NewInventoryFormPage = () => {
                         <View style={styles.modalBG}>
                             <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
                                 <Image source={require('../../assets/failedModal.png')} style={{ width: 96, height: 96, alignSelf: 'center' }} />
-                                <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center', marginTop: 20 }}>Inventory addition has failed, please recheck your field!</Text>
+                                <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center', marginTop: 20 }}>Inventory addition has failed, Meatname already exists</Text>
                                 <TouchableOpacity onPress={() => {setShowFailedModal(false)}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
                                         Close
@@ -187,7 +187,7 @@ const NewInventoryFormPage = () => {
                 {(showSuccessModal) ? successModal() : null}
             </View>
             <Spinner
-                visible={loadingAddMeat}
+                visible={meatSpinner}
                 textContent={'Loading...'}
                 textStyle={{ color: '#FFF' }}
             />

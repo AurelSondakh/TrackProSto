@@ -4,8 +4,7 @@ import * as actionTypes from '../Constants/Types'
 const initialState = {
     meatList: [],
     addMeatResponse: [],
-    loadingGetMeatList: false,
-    loadingAddMeat: false
+    meatSpinner: false
 }
 
 export const MeatReducer = (state = initialState, action) => {
@@ -14,36 +13,36 @@ export const MeatReducer = (state = initialState, action) => {
     case actionTypes.GET_ALL_MEATS_REQUEST:
       return {
         ...state,
-        loadingGetMeatList: true
+        meatSpinner: true
       };
     case actionTypes.GET_ALL_MEATS_SUCCESS:
       return {
         ...state,
         meatList: action.payload,
-        loadingGetMeatList: false
+        meatSpinner: false
       };
     case actionTypes.GET_ALL_MEATS_FAILURE:
       return {
         ...state,
         error: action.error,
-        loadingGetMeatList: false
+        meatSpinner: false
       };
     case actionTypes.ADD_MEATS_REQUEST:
       return {
         ...state,
-        loadingAddMeat: true
+        meatSpinner: true
       };
     case actionTypes.ADD_MEATS_SUCCESS:
       return {
         ...state,
         addMeatResponse: action.payload,
-        loadingAddMeat: false
+        meatSpinner: false
       };
     case actionTypes.ADD_MEATS_FAILURE:
       return {
         ...state,
         error: action.error,
-        loadingAddMeat: false
+        meatSpinner: false
       };
     case 'RESET_DATA_ADD_MEAT_RESPONSE':
       return {

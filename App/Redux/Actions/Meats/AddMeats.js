@@ -21,6 +21,10 @@ export const AddMeats = (loginToken, data) => {
        }).then(data => {
            console.log("ADD_MEATS: ", data);
            if(data.statuscode === 400) {
+                dispatch({
+                    type: ActionTypes.ADD_MEATS_SUCCESS,
+                    payload: data
+                })
                throw new Error("Bad Request")
            }
            dispatch({

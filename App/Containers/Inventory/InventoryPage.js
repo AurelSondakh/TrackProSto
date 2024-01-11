@@ -161,7 +161,7 @@ const InventoryPage = () => {
         ],
     };
 
-    const { meatList, loadingGetMeatList } = useSelector((state) => state.meat);
+    const { meatList, meatSpinner } = useSelector((state) => state.meat);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -189,7 +189,10 @@ const InventoryPage = () => {
     };
 
     useEffect(() => {
-        getInventoryList()
+        const unsubscribe = navigation.addListener('focus', () => {
+            getInventoryList()
+        })
+        return unsubscribe
     }, [dispatch, navigation])
 
     return (
@@ -229,7 +232,7 @@ const InventoryPage = () => {
                 renderItem={({ item }) => <InventoryList item={item} />}
                 keyExtractor={(item) => item.id} />
             <Spinner
-                visible={loadingGetMeatList}
+                visible={meatSpinner}
                 textContent={'Loading...'}
                 textStyle={{ color: '#FFF' }}
             />
