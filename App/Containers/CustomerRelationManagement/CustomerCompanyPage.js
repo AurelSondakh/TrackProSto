@@ -1,10 +1,14 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
+import {useDispatch, useSelector} from 'react-redux';
 import { View, Text, StatusBar, Dimensions, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { ActionCustomer } from '../../Redux/Actions/Customers'
+import GetLoginToken from '../../Utility/GetLoginToken';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // Components
 import CompanyList from '../../Components/CompanyList'
@@ -53,38 +57,35 @@ const CustomerCompanyPage = () => {
             "updated_by": ""
         }
     ]
-    const customerData= [
-        {
-            "customer_id": "8d73d24a-b398-4a15-a6fb-64db32c6d6b9",
-            "fullname": "jane doe",
-            "address": "dummyaddress",
-            "company_id": "d84c6493-a14e-4bdf-9970-49a00144900f",
-            "phone_number": "081239238918",
-            "created_at": "2023-11-04T08:36:41.749637Z",
-            "updated_at": "2023-11-04T08:36:41.749637Z",
-            "created_by": "bor",
-            "updated_by": "",
-            "debt": 0
-        },
-        {
-            "customer_id": "b79e46ab-22ad-4be2-b174-de0301807a82",
-            "fullname": "jane doe The",
-            "address": "dummyaddress",
-            "company_id": "d84c6493-a14e-4bdf-9970-49a00144900f",
-            "phone_number": "081239238918",
-            "created_at": "2023-11-04T08:35:24.253383Z",
-            "updated_at": "2023-11-07T06:02:47.494691Z",
-            "created_by": "bor",
-            "updated_by": "",
-            "debt": 1900000
-        }
-    ]
 
     const [index, setIndex] = useState(0);
     const [routes] = useState([
       { key: 'first', title: 'Customer' },
       { key: 'second', title: 'Company' },
     ]);
+
+    const dispatch = useDispatch();
+    const { customerList, customerSpinner } = useSelector((state) => state.customer);
+
+    const getCustomerList = async () => {
+        try {
+            const loginToken = await GetLoginToken()
+            dispatch(
+                ActionCustomer.GetAllCustomer(
+                   loginToken
+                ),
+            );
+        } catch (error) {
+          console.log('getLoginTokenError: ', error);
+        }
+    };
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getCustomerList()
+        })
+        return unsubscribe
+    }, [dispatch, navigation])
 
     const FirstRoute = () => (
         <View style={{ flex: 1, backgroundColor: '#F2F1FE' }} >
@@ -101,7 +102,7 @@ const CustomerCompanyPage = () => {
             <FlatList
                 style={{ marginBottom: 70 }}
                 nestedScrollEnabled
-                data={customerData}
+                data={customerList?.data?.customers}
                 renderItem={({item}) => <CustomerList item={item} swipe={true} />}
                 keyExtractor={item => item.customer_id}
             />
@@ -120,6 +121,7 @@ const CustomerCompanyPage = () => {
                 </TouchableOpacity>
                 {/* <Text style={{ fontFamily: 'Popping-Regular', fontSize: 13 }}>Total Inventory Value: {totalStockInventory} Kg</Text> */}
             </View>
+            {console.log(customerList)}
             <FlatList
                 style={{ marginBottom: 70 }}
                 nestedScrollEnabled
@@ -168,6 +170,11 @@ const CustomerCompanyPage = () => {
                 renderTabBar={renderTabBar}
                 onIndexChange={setIndex}
                 initialLayout={{ width: width }}
+            />
+            <Spinner
+                visible={customerSpinner}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
             />
         </View>
     )

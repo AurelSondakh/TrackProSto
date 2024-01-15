@@ -15,13 +15,7 @@ const CustomerDetailPage = (props) => {
     const item = props?.route?.params?.item
     const [showCompanyDetail, setShowCompanyDetail] = useState(false)
 
-    const customerDetail = {
-        customer_id: '8d73d24a-b398-4a15-a6fb-64db32c6d6b9',
-        fullname: 'Jane Doe',
-        phone_number: '081239238918',
-        debt: 0,
-        address: "dummy address dummy address dummy address dummy address",
-    }
+    const customerDetail = item
 
     const getCompany = {
         company_name: "dummyCompany",
@@ -35,6 +29,11 @@ const CustomerDetailPage = (props) => {
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
+
+    const numberWithCommas = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
 
     const companyDetailModal = () => {
         return (
@@ -114,7 +113,7 @@ const CustomerDetailPage = (props) => {
                     <View style={styles.listContainer}>
                         <MaterialCommunityIcon name='cash-minus' size={32} color={'#505383'} style={{ alignSelf: 'center' }} />
                         <Text style={styles.textContainer}>
-                            IDR {customerDetail?.debt}
+                            IDR {numberWithCommas(customerDetail?.debt)}
                         </Text>
                     </View>
                 </View>

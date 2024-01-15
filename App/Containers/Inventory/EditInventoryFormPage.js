@@ -1,10 +1,14 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
+import {useDispatch, useSelector} from 'react-redux';
 import { View, Text, TouchableOpacity, SafeAreaView, TextInput, Image, Modal, StyleSheet, Dimensions } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-
+import GetLoginToken from '../../Utility/GetLoginToken'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { ActionMeat } from '../../Redux/Actions/Meats'
+import { ActionUtility } from '../../Redux/Actions/Utility';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const height = Dimensions.get('screen').height
 const width = Dimensions.get('screen').width
@@ -21,8 +25,10 @@ const EditInventoryFormPage = (props) => {
     const [errorMeatNameField, setErrorMeatNameField] = useState(false)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showFailedModal, setShowFailedModal] = useState(false)
+    const dispatch = useDispatch();
+    const { editMeatResponse, meatSpinner } = useSelector((state) => state.meat);
 
-    const regexMeatName = /^[a-zA-Z]+$/
+    const regexMeatName = /^(?!\s+$)[a-zA-Z\s]+$/
 
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -40,21 +46,41 @@ const EditInventoryFormPage = (props) => {
         else setDisableSaveButton(true)
     }, [meatName, meatStock, errorMeatNameField])
 
-    const postMeat = () => {
-        let data = {
-            name: meatName,
-            stock: meatStock,
-            price: 1
+    const postMeat = async () => {
+        try {
+            let bodyReq = {
+                name: meatName,
+                stock: Number(meatStock)
+            }
+            const loginToken = await GetLoginToken();
+            dispatch(
+                ActionMeat.EditMeats(
+                    loginToken, item?.Meat?.id, bodyReq
+                ),
+            );
+        } catch (error) {
+            console.log('getLoginTokenError: ', error);
         }
-        console.log(`EditMeat: ${data}`)
-        let response = {
-            statuscode: 200,
-        }
-
-        if(response.statuscode === 200) {
-            setShowSuccessModal(true)
-        } else setShowFailedModal(true)
     }
+
+    useEffect(() => {
+        console.log(editMeatResponse, 'editMeatResponse')
+        if('statuscode' in editMeatResponse) {
+            if(editMeatResponse.statuscode === 200) {
+                setMeatName('')
+                setMeatStock('')
+                setMeatNameFocus(false)
+                setMeatStockFocus(false)
+                setShowSuccessModal(true)
+                setErrorMeatNameField(false)
+                setDisableSaveButton(true)
+                dispatch(ActionUtility.ResetDataEditMeatResponse())
+            } else {
+                console.log(editMeatResponse)
+                setShowFailedModal(true)
+            }
+        }
+    }, [editMeatResponse, dispatch])
 
     const successModal = () => {
         return (

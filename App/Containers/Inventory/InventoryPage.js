@@ -10,8 +10,8 @@ import moment from 'moment/moment';
 import { enableScreens } from 'react-native-screens';
 import InventoryList from '../../Components/InventoryList';
 import { ActionMeat } from '../../Redux/Actions/Meats'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Spinner from 'react-native-loading-spinner-overlay';
+import GetLoginToken from '../../Utility/GetLoginToken';
 
 enableScreens();
 
@@ -33,15 +33,13 @@ const InventoryPage = () => {
 
     const getInventoryList = async () => {
         try {
-          const loginToken = await AsyncStorage.getItem('loginToken');
-          if (loginToken) {
+            const loginToken = await GetLoginToken();
             let pagination = 1
             dispatch(
                 ActionMeat.GetAllMeats(
                    loginToken, pagination
                 ),
             );
-          }
         } catch (error) {
           console.log('getLoginTokenError: ', error);
         }

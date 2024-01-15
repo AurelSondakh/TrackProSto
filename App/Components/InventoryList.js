@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native'
 import { ActionMeat } from '../Redux/Actions/Meats'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Spinner from 'react-native-loading-spinner-overlay';
+import GetLoginToken from '../Utility/GetLoginToken';
 
 const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
@@ -36,14 +37,12 @@ const InventoryList = ({item, refreshFunction}) => {
     const deleteMeat = async () => {
         console.log('Meat Id', item?.Meat?.id)
         try {
-            const loginToken = await AsyncStorage.getItem('loginToken');
-            if (loginToken) {
-                dispatch(
-                    ActionMeat.DeleteMeats(
-                        loginToken, item?.Meat?.id
-                    ),
-                );
-            }
+            const loginToken = await GetLoginToken();
+            dispatch(
+                ActionMeat.DeleteMeats(
+                    loginToken, item?.Meat?.id
+                ),
+            );
         } catch (error) {
             console.log('getLoginTokenError: ', error);
         }

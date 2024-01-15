@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ActionMeat } from '../../Redux/Actions/Meats'
 import { ActionUtility } from '../../Redux/Actions/Utility';
 import Spinner from 'react-native-loading-spinner-overlay';
+import GetLoginToken from '../../Utility/GetLoginToken';
 
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -39,8 +40,7 @@ const NewInventoryFormPage = () => {
 
     const postMeat = async () => {
         try {
-          const loginToken = await AsyncStorage.getItem('loginToken');
-          if (loginToken) {
+            const loginToken = await GetLoginToken();
             let bodyReq = {
                 name: meatName,
                 stock: Number(meatStock)
@@ -50,7 +50,6 @@ const NewInventoryFormPage = () => {
                    loginToken, bodyReq
                 ),
             );
-          }
         } catch (error) {
           console.log('getLoginTokenError: ', error);
         }
