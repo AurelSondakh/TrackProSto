@@ -1,17 +1,23 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
+import {useDispatch, useSelector} from 'react-redux';
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native'
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
+import { ActionMeat } from '../Redux/Actions/Meats'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const width = Dimensions.get('screen').width
 
-const InventoryList = ({item}) => {
+const InventoryList = ({item, refreshFunction}) => {
     const navigation = useNavigation()
     const [showInventoryDetail, setShowInventoryDetail] = useState(false)
+    const { meatSpinner } = useSelector((state) => state.meat);
+    const dispatch = useDispatch();
 
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -23,6 +29,23 @@ const InventoryList = ({item}) => {
     const toggleChevron = () => {
         if (showInventoryDetail) setShowInventoryDetail(false)
         else setShowInventoryDetail(true)
+    }
+
+    const deleteMeat = async () => {
+        console.log('Meat Id', item?.Meat?.id)
+        try {
+            const loginToken = await AsyncStorage.getItem('loginToken');
+            if (loginToken) {
+                dispatch(
+                    ActionMeat.DeleteMeats(
+                        loginToken, item?.Meat?.id
+                    ),
+                );
+            }
+        } catch (error) {
+            console.log('getLoginTokenError: ', error);
+        }
+        refreshFunction()
     }
 
     const inventoryDetail = () => {
@@ -46,7 +69,7 @@ const InventoryList = ({item}) => {
         return (
           <TouchableOpacity
             onPress={() => {
-            //   deleteOneHistory()
+              deleteMeat()
             }} style={{ justifyContent: 'center', alignItems: 'flex-end', backgroundColor: '#FFE5E8', marginBottom: 0, marginLeft: -268, borderRadius: 10, width: width - 64, borderWidth: 1, borderColor: '#CACEDD' }}
           >
             <View style={{ paddingHorizontal: 12, alignItems: 'center', marginRight: 4 }}>
@@ -59,6 +82,11 @@ const InventoryList = ({item}) => {
 
     return (
         <View style={{ paddingHorizontal: 15, marginTop: 10 }}>
+            <Spinner
+                visible={meatSpinner}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+            />
             <GestureHandlerRootView>
                 <Swipeable renderRightActions={leftSwipe}>
                     <View style={{ padding: 15, backgroundColor: '#FFF', borderRadius: 10 }}>

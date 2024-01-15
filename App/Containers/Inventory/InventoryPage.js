@@ -19,147 +19,6 @@ const InventoryPage = () => {
 
     let date = `${moment().format('dddd')}, ${moment().format('MMM Do YYYY')}`;
     const navigation = useNavigation();
-    const invenData = {
-        'statuscode': 200,
-        'message': 'Success',
-        'data': [
-            {
-                'Meat': {
-                    'id': 'd9f026fd-b338-41ae-9a0d-1a66608a84ba',
-                    'name': 'sirloin',
-                    'stock': 79,
-                    'price': 100000,
-                    'is_active': true,
-                    'created_at': '2023-08-23T15:08:00.980402Z',
-                    'updated_at': '2023-08-23T15:08:00.980402Z',
-                    'created_by': 'admin',
-                    'updated_by': '',
-                },
-                'StockIn': 27,
-                'StockOut': 0,
-            },
-            {
-                'Meat': {
-                    'id': '49a534d8-98c5-4281-b355-bcad383fafcd',
-                    'name': 'kikil',
-                    'stock': 100,
-                    'price': 100000,
-                    'is_active': true,
-                    'created_at': '2023-10-27T16:07:25.190536Z',
-                    'updated_at': '2023-10-27T16:07:25.190536Z',
-                    'created_by': 'admin',
-                    'updated_by': '',
-                },
-                'StockIn': 0,
-                'StockOut': 0,
-            },
-            {
-                'Meat': {
-                    'id': '9f666fc9-2a73-4530-8726-1afdc65c85de',
-                    'name': 'buntut',
-                    'stock': 86,
-                    'price': 100000,
-                    'is_active': true,
-                    'created_at': '2023-08-23T15:08:08.11459Z',
-                    'updated_at': '2023-08-23T15:08:08.11459Z',
-                    'created_by': 'admin',
-                    'updated_by': '',
-                },
-                'StockIn': 18,
-                'StockOut': 0,
-            },
-            {
-                'Meat': {
-                    'id': 'd9f026fd-b338-41ae-9a0d-1a66608a84ba',
-                    'name': 'sirloin',
-                    'stock': 79,
-                    'price': 100000,
-                    'is_active': true,
-                    'created_at': '2023-08-23T15:08:00.980402Z',
-                    'updated_at': '2023-08-23T15:08:00.980402Z',
-                    'created_by': 'admin',
-                    'updated_by': '',
-                },
-                'StockIn': 27,
-                'StockOut': 0,
-            },
-            {
-                'Meat': {
-                    'id': '49a534d8-98c5-4281-b355-bcad383fafcd',
-                    'name': 'kikil',
-                    'stock': 100,
-                    'price': 100000,
-                    'is_active': true,
-                    'created_at': '2023-10-27T16:07:25.190536Z',
-                    'updated_at': '2023-10-27T16:07:25.190536Z',
-                    'created_by': 'admin',
-                    'updated_by': '',
-                },
-                'StockIn': 0,
-                'StockOut': 0,
-            },
-            {
-                'Meat': {
-                    'id': '9f666fc9-2a73-4530-8726-1afdc65c85de',
-                    'name': 'buntut',
-                    'stock': 86,
-                    'price': 100000,
-                    'is_active': true,
-                    'created_at': '2023-08-23T15:08:08.11459Z',
-                    'updated_at': '2023-08-23T15:08:08.11459Z',
-                    'created_by': 'admin',
-                    'updated_by': '',
-                },
-                'StockIn': 18,
-                'StockOut': 0,
-            },
-            {
-                'Meat': {
-                    'id': 'd9f026fd-b338-41ae-9a0d-1a66608a84ba',
-                    'name': 'sirloin',
-                    'stock': 79,
-                    'price': 100000,
-                    'is_active': true,
-                    'created_at': '2023-08-23T15:08:00.980402Z',
-                    'updated_at': '2023-08-23T15:08:00.980402Z',
-                    'created_by': 'admin',
-                    'updated_by': '',
-                },
-                'StockIn': 27,
-                'StockOut': 0,
-            },
-            {
-                'Meat': {
-                    'id': '49a534d8-98c5-4281-b355-bcad383fafcd',
-                    'name': 'kikil',
-                    'stock': 100,
-                    'price': 100000,
-                    'is_active': true,
-                    'created_at': '2023-10-27T16:07:25.190536Z',
-                    'updated_at': '2023-10-27T16:07:25.190536Z',
-                    'created_by': 'admin',
-                    'updated_by': '',
-                },
-                'StockIn': 0,
-                'StockOut': 0,
-            },
-            {
-                'Meat': {
-                    'id': '9f666fc9-2a73-4530-8726-1afdc65c85de',
-                    'name': 'buntut',
-                    'stock': 86,
-                    'price': 100000,
-                    'is_active': true,
-                    'created_at': '2023-08-23T15:08:08.11459Z',
-                    'updated_at': '2023-08-23T15:08:08.11459Z',
-                    'created_by': 'admin',
-                    'updated_by': '',
-                },
-                'StockIn': 18,
-                'StockOut': 0,
-            },
-        ],
-    };
 
     const { meatList, meatSpinner } = useSelector((state) => state.meat);
     const dispatch = useDispatch();
@@ -176,7 +35,7 @@ const InventoryPage = () => {
         try {
           const loginToken = await AsyncStorage.getItem('loginToken');
           if (loginToken) {
-            let pagination = 3
+            let pagination = 1
             dispatch(
                 ActionMeat.GetAllMeats(
                    loginToken, pagination
@@ -229,8 +88,8 @@ const InventoryPage = () => {
                 style={{ marginBottom: 70 }}
                 nestedScrollEnabled
                 data={meatList?.data?.meats}
-                renderItem={({ item }) => <InventoryList item={item} />}
-                keyExtractor={(item) => item.id} />
+                renderItem={({ item }) => <InventoryList item={item} refreshFunction={getInventoryList} />}
+                keyExtractor={(item) => item?.Meat?.id} />
             <Spinner
                 visible={meatSpinner}
                 textContent={'Loading...'}

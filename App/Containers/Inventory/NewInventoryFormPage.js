@@ -55,7 +55,6 @@ const NewInventoryFormPage = () => {
           console.log('getLoginTokenError: ', error);
         }
     };
-
     useEffect(() => {
         console.log(addMeatResponse, 'addMeatResponse')
         if('statuscode' in addMeatResponse) {
