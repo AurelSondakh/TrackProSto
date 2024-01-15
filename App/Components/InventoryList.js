@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
 import {useDispatch, useSelector} from 'react-redux';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native'
+import { View, Text, TouchableOpacity, Dimensions, Modal, StyleSheet, SafeAreaView } from 'react-native'
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -12,10 +12,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const width = Dimensions.get('screen').width
+const height = Dimensions.get('screen').height
 
 const InventoryList = ({item, refreshFunction}) => {
     const navigation = useNavigation()
     const [showInventoryDetail, setShowInventoryDetail] = useState(false)
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
     const { meatSpinner } = useSelector((state) => state.meat);
     const dispatch = useDispatch();
 
@@ -69,7 +71,7 @@ const InventoryList = ({item, refreshFunction}) => {
         return (
           <TouchableOpacity
             onPress={() => {
-              deleteMeat()
+              setShowConfirmModal(true)
             }} style={{ justifyContent: 'center', alignItems: 'flex-end', backgroundColor: '#FFE5E8', marginBottom: 0, marginLeft: -268, borderRadius: 10, width: width - 64, borderWidth: 1, borderColor: '#CACEDD' }}
           >
             <View style={{ paddingHorizontal: 12, alignItems: 'center', marginRight: 4 }}>
@@ -77,6 +79,35 @@ const InventoryList = ({item, refreshFunction}) => {
               <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 12, color: '#D4979D' }}>Delete</Text>
             </View>
           </TouchableOpacity>
+        )
+    }
+
+    const confirmationModal = () => {
+        return (
+            <View style={{flex: 1 }}>
+                <Modal animationType='fade' visible={showConfirmModal} transparent={true} statusBarTranslucent>
+                    <SafeAreaView style={styles.modalDim}>
+                        <View style={[styles.modalBG, {marginVertical: height / 3}]}>
+                            <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
+                                <Text style={{ textAlign: 'center', fontFamily: 'Poppins-SemiBold', fontSize: 18, marginBottom: 10 }}>Delete Confirmation</Text>
+                                <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center' }}><Text style={{ fontFamily: 'Poppins-Bold', color: '#505383' }}>{item.Meat?.name}</Text> will be deleted. Are you sure ?</Text>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 15 }}>
+                                    <TouchableOpacity onPress={() => {setShowConfirmModal(false); deleteMeat()}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#FF6261', borderRadius: 10 }}>
+                                        <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
+                                            Delete
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => {setShowConfirmModal(false)}} style={{ backgroundColor: '#505383', borderRadius: 10, marginLeft: 10,  paddingHorizontal: 20, paddingVertical: 15 }}>
+                                        <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
+                                            Cancel
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </SafeAreaView>
+                </Modal>
+            </View>
         )
     }
 
@@ -102,8 +133,29 @@ const InventoryList = ({item, refreshFunction}) => {
                     </View>
                 </Swipeable>
             </GestureHandlerRootView>
+            {showConfirmModal ? confirmationModal() : null}
         </View>
     )
 }
 
 export default InventoryList
+const styles = StyleSheet.create({
+    modalDim: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },
+    modalBG: {
+        flex: 1,
+        borderRadius: 15,
+        marginHorizontal: width / 8,
+        marginVertical: height / 5,
+        backgroundColor: '#FFF',
+        overflow: 'hidden'
+    },
+    modalTitle: {
+        flexDirection: 'row',
+        marginLeft: 21,
+        marginTop: 21,
+        marginBottom: 14
+    },
+})
