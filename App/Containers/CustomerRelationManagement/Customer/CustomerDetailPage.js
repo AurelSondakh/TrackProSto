@@ -1,10 +1,14 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet, Modal, SafeAreaView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { ActionCompany } from '../../../Redux/Actions/Company'
+import GetLoginToken from '../../../Utility/GetLoginToken'
+import Spinner from 'react-native-loading-spinner-overlay';
+import {useDispatch, useSelector} from 'react-redux';
 
 const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
@@ -12,10 +16,8 @@ const height = Dimensions.get('screen').height
 const CustomerDetailPage = (props) => {
 
     const navigation = useNavigation()
-    const item = props?.route?.params?.item
+    const customerDetail = props?.route?.params?.item
     const [showCompanyDetail, setShowCompanyDetail] = useState(false)
-
-    const customerDetail = item
 
     const getCompany = {
         company_name: "dummyCompany",
@@ -24,16 +26,33 @@ const CustomerDetailPage = (props) => {
         phone_number: "09127865334",
     }
 
-    console.log(props)
-
     const capitalizeFirstLetter = (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
+        return str?.charAt(0)?.toUpperCase() + str?.slice(1);
     };
 
     const numberWithCommas = (number) => {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     };
 
+    const dispatch = useDispatch();
+    const { companyDetail, companySpinner } = useSelector((state) => state.company);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const loginToken = await GetLoginToken();
+                dispatch(
+                    ActionCompany.GetCompanyById(
+                        loginToken,
+                        customerDetail.company_id
+                    ),
+                );
+            } catch (error) {
+                console.log('getLoginTokenError: ', error);
+            }
+        };
+        fetchData();
+    }, [dispatch, navigation]);
 
     const companyDetailModal = () => {
         return (
@@ -48,19 +67,19 @@ const CustomerDetailPage = (props) => {
                                 <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#505383', alignSelf: 'center', marginBottom: 5 }}>Company Detail</Text>
                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                     <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, textAlignVertical: 'center', width: width / 3 }}>Name: </Text>
-                                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, width: width / 2.5 }}>{getCompany?.company_name}</Text>
+                                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, width: width / 2.5 }}>{companyDetail?.data?.company_name}</Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                     <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, textAlignVertical: 'center', width: width / 3 }}>Email: </Text>
-                                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, width: width / 2.5 }}>{getCompany?.email}</Text>
+                                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, width: width / 2.5 }}>{companyDetail?.data?.email}</Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                     <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, textAlignVertical: 'center', width: width / 3 }}>Phone Number: </Text>
-                                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, width: width / 2.5 }}>{getCompany?.phone_number}</Text>
+                                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, width: width / 2.5 }}>{companyDetail?.data?.phone_number}</Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                     <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, textAlignVertical: 'center', width: width / 3 }}>Address: </Text>
-                                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, width: width / 2.5 }}>{getCompany?.address}</Text>
+                                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10, width: width / 2.5 }}>{companyDetail?.data?.address}</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => {setShowCompanyDetail(false)}} style={{ paddingHorizontal: 20, paddingVertical: 12, backgroundColor: '#505383', borderRadius: 10, marginTop: 25 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
@@ -129,7 +148,7 @@ const CustomerDetailPage = (props) => {
                     <View style={styles.listContainer}>
                         <IonIcons name='business' size={32} color={'#505383'} style={{ alignSelf: 'center' }} />
                         <Text style={[styles.textContainer, { width: width / 1.9 }]}>
-                            {capitalizeFirstLetter(getCompany?.company_name)}
+                            {capitalizeFirstLetter(companyDetail?.data?.company_name)}
                         </Text>
                         <TouchableOpacity onPress={() => setShowCompanyDetail(true)} style={{ alignSelf: 'center', marginLeft: 10 }}>
                             <IonIcons name='information-circle' size={24} color={'#181A45'} />
@@ -146,6 +165,11 @@ const CustomerDetailPage = (props) => {
                 </TouchableOpacity>
             </View>
             {companyDetailModal()}
+            <Spinner
+                visible={companySpinner}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+            />
         </View>
     )
 }
