@@ -9,6 +9,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ActionCustomer } from '../../Redux/Actions/Customers'
 import GetLoginToken from '../../Utility/GetLoginToken';
 import Spinner from 'react-native-loading-spinner-overlay';
+import GetUserRole from '../../Utility/GetUserRole';
 
 // Components
 import CompanyList from '../../Components/CompanyList'
@@ -63,6 +64,7 @@ const CustomerCompanyPage = () => {
       { key: 'first', title: 'Customer' },
       { key: 'second', title: 'Company' },
     ]);
+    const [ userRole, setUserRole ] = useState(null)
 
     const dispatch = useDispatch();
     const { customerList, customerSpinner } = useSelector((state) => state.customer);
@@ -81,6 +83,19 @@ const CustomerCompanyPage = () => {
     };
 
     useEffect(() => {
+        const getRole = async () => {
+            try {
+                setUserRole(await GetUserRole());
+                console.log(userRole, 'USER ROLE');
+              } catch (error) {
+                // Handle error
+                console.error('Error fetching user role:', error);
+              }
+        }
+        getRole()
+    })
+
+    useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             getCustomerList()
         })
@@ -91,19 +106,22 @@ const CustomerCompanyPage = () => {
         <View style={{ flex: 1, backgroundColor: '#F2F1FE' }} >
             <View style={{ marginHorizontal: 15, marginTop: 20, paddingBottom: 8 }}>
                 <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14 }}>Customer Overview</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('NewCustomerFormPage')} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
-                    <AntDesign name="pluscircle" color={'#FFF'} size={18} style={{ marginRight: 10,alignSelf: 'center' }} />
-                    <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF', alignSelf: 'center' }}>
-                        Add New Customer
-                    </Text>
-                </TouchableOpacity>
+                {userRole === 'employee'
+                    ? null
+                    : <TouchableOpacity onPress={() => navigation.navigate('NewCustomerFormPage')} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
+                        <AntDesign name="pluscircle" color={'#FFF'} size={18} style={{ marginRight: 10,alignSelf: 'center' }} />
+                        <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF', alignSelf: 'center' }}>
+                            Add New Customer
+                        </Text>
+                    </TouchableOpacity>
+                }
                 {/* <Text style={{ fontFamily: 'Popping-Regular', fontSize: 13 }}>Total Inventory Value: {totalStockInventory} Kg</Text> */}
             </View>
             <FlatList
                 style={{ marginBottom: 70 }}
                 nestedScrollEnabled
                 data={customerList?.data?.customers}
-                renderItem={({item}) => <CustomerList item={item} swipe={true} />}
+                renderItem={({item}) => <CustomerList item={item} swipe={true} userRole={userRole} />}
                 keyExtractor={item => item.customer_id}
             />
         </View>
@@ -113,12 +131,15 @@ const CustomerCompanyPage = () => {
         <View style={{ flex: 1, backgroundColor: '#F2F1FE' }} >
             <View style={{ marginHorizontal: 15, marginTop: 20, paddingBottom: 8 }}>
                 <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14 }}>Company Overview</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('NewCompanyFormPage')} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
-                    <AntDesign name="pluscircle" color={'#FFF'} size={18} style={{ marginRight: 10,alignSelf: 'center' }} />
-                    <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF', alignSelf: 'center' }}>
-                        Add New Company
-                    </Text>
-                </TouchableOpacity>
+                {userRole === 'employee'
+                    ? null
+                    : <TouchableOpacity onPress={() => navigation.navigate('NewCompanyFormPage')} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
+                        <AntDesign name="pluscircle" color={'#FFF'} size={18} style={{ marginRight: 10,alignSelf: 'center' }} />
+                        <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF', alignSelf: 'center' }}>
+                            Add New Company
+                        </Text>
+                    </TouchableOpacity>
+                }
                 {/* <Text style={{ fontFamily: 'Popping-Regular', fontSize: 13 }}>Total Inventory Value: {totalStockInventory} Kg</Text> */}
             </View>
             {console.log(customerList)}

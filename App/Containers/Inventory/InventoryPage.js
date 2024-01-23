@@ -12,6 +12,7 @@ import InventoryList from '../../Components/InventoryList';
 import { ActionMeat } from '../../Redux/Actions/Meats'
 import Spinner from 'react-native-loading-spinner-overlay';
 import GetLoginToken from '../../Utility/GetLoginToken';
+import GetUserRole from '../../Utility/GetUserRole';
 
 enableScreens();
 
@@ -21,7 +22,21 @@ const InventoryPage = () => {
     const navigation = useNavigation();
 
     const { meatList, meatSpinner } = useSelector((state) => state.meat);
+    const [ userRole, setUserRole ] = useState(null)
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const getRole = async () => {
+            try {
+                setUserRole(await GetUserRole());
+                console.log(userRole, 'USER ROLE');
+              } catch (error) {
+                // Handle error
+                console.error('Error fetching user role:', error);
+              }
+        }
+        getRole()
+    })
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -66,12 +81,15 @@ const InventoryPage = () => {
             </View>
             <View style={{ marginHorizontal: 15, marginTop: 20, paddingBottom: 8 }}>
                 <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14 }}>Inventory Overview</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('NewInventoryFormPage')} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
+                {(userRole === 'employee')
+                ? null
+                : <TouchableOpacity onPress={() => navigation.navigate('NewInventoryFormPage')} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
                     <AntDesign name="pluscircle" color={'#FFF'} size={18} style={{ marginRight: 10,alignSelf: 'center' }} />
                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF', alignSelf: 'center' }}>
                         Add New Inventory
                     </Text>
                 </TouchableOpacity>
+                }
                 {/* <Text style={{ fontFamily: 'Popping-Regular', fontSize: 13 }}>Total Inventory Value: {totalStockInventory} Kg</Text> */}
             </View>
             {/* <View style={{ flexDirection: 'row', marginHorizontal: 15, backgroundColor: '#FFF', borderWidth: 1, borderRadius: 10 }}>

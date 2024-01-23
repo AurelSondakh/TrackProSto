@@ -24,6 +24,7 @@ const CustomerList = (props) => {
     console.log(props, swipe)
     let swipe = props?.swipe
     let item = props?.item
+    let userRole = props?.userRole
     const navigation = useNavigation()
 
     const capitalizeFirstLetter = (str) => {
@@ -49,28 +50,37 @@ const CustomerList = (props) => {
         )
     }
 
-    return(
-        <TouchableOpacity onPress={() => navigation.navigate('CustomerDetailPage', {item})} style={{ paddingHorizontal: 15, marginTop: 10 }}>
-            <GestureHandlerRootView>
-                <Swipeable renderRightActions={(swipe) ? leftSwipe : null}>
-                    <View style={{ padding: 15, backgroundColor: '#FFF', borderRadius: 10 }}>
-                         <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14, color: '#505383' }}>{capitalizeFirstLetter(item.fullname)}</Text>
-                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-                             <View style={{ width: width / 2 }}>
-                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13, width: width/1.3 }}>Phone Number</Text>
-                                 <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#505383', marginTop: -5, width: width / 1.3 }}>{item?.phone_number}</Text>
-                             </View>
-                             <View style={{ }}>
-                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13 }}>Outstanding Amount</Text>
-                                <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: item?.debt == 0 ? '#505383' : '#E93939', marginTop: -5, width: width / 3.5 }}>IDR {numberWithCommas(item?.debt)}</Text>
-                            </View>
+    const renderItem = () => {
+        return (
+            <View style={{ padding: 15, backgroundColor: '#FFF', borderRadius: 10 }}>
+                    <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14, color: '#505383' }}>{capitalizeFirstLetter(item.fullname)}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                        <View style={{ width: width / 2 }}>
+                            <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13, width: width/1.3 }}>Phone Number</Text>
+                            <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#505383', marginTop: -5, width: width / 1.3 }}>{item?.phone_number}</Text>
                         </View>
-                        <View>
-                            <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13, width: width/1.3 }}>Address</Text>
-                            <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#505383', marginTop: -5 }}>{item?.address}</Text>
-                        </View>
+                        <View style={{ }}>
+                            <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13 }}>Outstanding Amount</Text>
+                        <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: item?.debt == 0 ? '#505383' : '#E93939', marginTop: -5, width: width / 3.5 }}>IDR {numberWithCommas(item?.debt)}</Text>
                     </View>
-                </Swipeable>
+                </View>
+                <View>
+                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13, width: width/1.3 }}>Address</Text>
+                    <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#505383', marginTop: -5 }}>{item?.address}</Text>
+                </View>
+            </View>
+        )
+    }
+
+    return(
+        <TouchableOpacity onPress={() => navigation.navigate('CustomerDetailPage', {item, userRole})} style={{ paddingHorizontal: 15, marginTop: 10 }}>
+            <GestureHandlerRootView>
+                {userRole === 'employee'
+                    ? renderItem()
+                    : <Swipeable renderRightActions={(swipe) ? leftSwipe : null}>
+                        {renderItem()}
+                    </Swipeable>
+                }
             </GestureHandlerRootView>
         </TouchableOpacity>
     )

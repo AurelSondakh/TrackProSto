@@ -17,14 +17,8 @@ const CustomerDetailPage = (props) => {
 
     const navigation = useNavigation()
     const customerDetail = props?.route?.params?.item
+    const userRole = props?.route?.params?.userRole
     const [showCompanyDetail, setShowCompanyDetail] = useState(false)
-
-    const getCompany = {
-        company_name: "dummyCompany",
-        address: "Jalan Sudirman No. 123, Jakarta Pusat",
-        email: "dummyCompany@dummyCompany.com",
-        phone_number: "09127865334",
-    }
 
     const capitalizeFirstLetter = (str) => {
         return str?.charAt(0)?.toUpperCase() + str?.slice(1);
@@ -156,14 +150,17 @@ const CustomerDetailPage = (props) => {
                     </View>
                 </View>
             </View>
-            <View style={{ marginHorizontal: 50 }}>
-                <TouchableOpacity onPress={() => navigation.navigate('EditCustomerFormPage', {customerDetail})} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
-                    <FontAwesome name="edit" color={'#FFF'} size={18} style={{ marginRight: 10, alignSelf: 'center' }} />
-                    <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#FFF' }}>
-                        Edit Customer
-                    </Text>
-                </TouchableOpacity>
-            </View>
+            {userRole === 'employee'
+                ? null
+                : <View style={{ marginHorizontal: 50 }}>
+                    <TouchableOpacity onPress={() => navigation.navigate('EditCustomerFormPage', {customerDetail})} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center' }}>
+                        <FontAwesome name="edit" color={'#FFF'} size={18} style={{ marginRight: 10, alignSelf: 'center' }} />
+                        <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 16, color: '#FFF' }}>
+                            Edit Customer
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            }
             {companyDetailModal()}
             <Spinner
                 visible={companySpinner}

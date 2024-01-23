@@ -11,6 +11,7 @@ import { ActionMeat } from '../Redux/Actions/Meats'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Spinner from 'react-native-loading-spinner-overlay';
 import GetLoginToken from '../Utility/GetLoginToken';
+import GetUserRole from '../Utility/GetUserRole';
 
 const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
@@ -19,8 +20,22 @@ const InventoryList = ({item, refreshFunction}) => {
     const navigation = useNavigation()
     const [showInventoryDetail, setShowInventoryDetail] = useState(false)
     const [showConfirmModal, setShowConfirmModal] = useState(false)
+    const [ userRole, setUserRole ] = useState(null)
     const { meatSpinner } = useSelector((state) => state.meat);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const getRole = async () => {
+            try {
+                setUserRole(await GetUserRole());
+                console.log(userRole, 'USER ROLE');
+              } catch (error) {
+                // Handle error
+                console.error('Error fetching user role:', error);
+              }
+        }
+        getRole()
+    })
 
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -56,12 +71,15 @@ const InventoryList = ({item, refreshFunction}) => {
                     <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 12, marginTop: 10, marginLeft: 10 }}>Stock In: <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13 }}>{numberWithCommas(item.StockIn)} Kg</Text></Text>
                     <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 12, marginLeft: 10 }}>Stock Out: <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13 }}>{numberWithCommas(item.StockOut)} Kg</Text></Text>
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('EditInventoryFormPage', {item})} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center', alignSelf: 'center' }}>
+                {(userRole === 'employee')
+                ? null
+                : <TouchableOpacity onPress={() => navigation.navigate('EditInventoryFormPage', {item})} style={{ padding: 10, backgroundColor: '#505383', borderRadius: 10, flexDirection: 'row', marginTop: 5, justifyContent: 'center', alignSelf: 'center' }}>
                     <FontAwesome name="edit" color={'#FFF'} size={18} style={{ marginRight: 10, alignSelf: 'center' }} />
                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 13, color: '#FFF' }}>
                         Edit Inventory
                     </Text>
                 </TouchableOpacity>
+                }
             </View>
         )
     }
@@ -110,6 +128,22 @@ const InventoryList = ({item, refreshFunction}) => {
         )
     }
 
+    const renderItem = () => {
+        return (
+            <View style={{ padding: 15, backgroundColor: '#FFF', borderRadius: 10 }}>
+                <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14, color: '#505383' }}>{capitalizeFirstLetter(item.Meat?.name)}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: -5 }}>
+                    <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13 }}>Total Stock: <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#505383' }}>{numberWithCommas(item.Meat?.stock)} Kg</Text></Text>
+                    {/* <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13 }}>Price: <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#505383' }}>IDR {numberWithCommas(item.Meat?.price)}</Text></Text> */}
+                    <TouchableOpacity onPress={toggleChevron}>
+                        <MaterialCommunityIcons name={(!showInventoryDetail ? 'chevron-down-circle' : 'chevron-up-circle')} size={18} color={'#505383'} />
+                    </TouchableOpacity>
+                </View>
+                {(!showInventoryDetail) ? null : inventoryDetail()}
+            </View>
+        )
+    }
+
     return (
         <View style={{ paddingHorizontal: 15, marginTop: 10 }}>
             <Spinner
@@ -118,19 +152,12 @@ const InventoryList = ({item, refreshFunction}) => {
                 textStyle={{ color: '#FFF' }}
             />
             <GestureHandlerRootView>
-                <Swipeable renderRightActions={leftSwipe}>
-                    <View style={{ padding: 15, backgroundColor: '#FFF', borderRadius: 10 }}>
-                        <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14, color: '#505383' }}>{capitalizeFirstLetter(item.Meat?.name)}</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: -5 }}>
-                            <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13 }}>Total Stock: <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#505383' }}>{numberWithCommas(item.Meat?.stock)} Kg</Text></Text>
-                            {/* <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 13 }}>Price: <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#505383' }}>IDR {numberWithCommas(item.Meat?.price)}</Text></Text> */}
-                            <TouchableOpacity onPress={toggleChevron}>
-                                <MaterialCommunityIcons name={(!showInventoryDetail ? 'chevron-down-circle' : 'chevron-up-circle')} size={18} color={'#505383'} />
-                            </TouchableOpacity>
-                        </View>
-                        {(!showInventoryDetail) ? null : inventoryDetail()}
-                    </View>
+                {(userRole === 'employee')
+                ? renderItem()
+                : <Swipeable renderRightActions={leftSwipe}>
+                    {renderItem()}
                 </Swipeable>
+                }
             </GestureHandlerRootView>
             {showConfirmModal ? confirmationModal() : null}
         </View>
