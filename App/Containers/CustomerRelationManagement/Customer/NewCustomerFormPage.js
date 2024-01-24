@@ -1,9 +1,15 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react'
+import {useDispatch, useSelector} from 'react-redux';
 import { View, Text, TouchableOpacity, TextInput, Modal, Image, StyleSheet, SafeAreaView, Dimensions } from 'react-native'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
+import { ActionCompany } from '../../../Redux/Actions/Company'
+import GetLoginToken from '../../../Utility/GetLoginToken';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { SelectList } from 'react-native-dropdown-select-list'
+import map from 'lodash/map';
 
 const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
@@ -22,13 +28,48 @@ const NewCustomerFormPage = () => {
     const [customerAddressFocus, setCustomerAddressFocus] = useState(false)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showFailedModal, setShowFailedModal] = useState(false)
+    const [dropdownCompanyList, setDropdownCompanyList] = useState(null)
+    const [selectedCompanyId, setSelectedCompanyId] = useState()
+
+    const dispatch = useDispatch();
+    const { companyList, companySpinner } = useSelector((state) => state.company);
+
+    const getCompanyList = async () => {
+        try {
+            const loginToken = await GetLoginToken()
+            dispatch(
+                ActionCompany.GetAllCompany(
+                   loginToken
+                ),
+            );
+        } catch (error) {
+          console.log('getLoginTokenError: ', error);
+        }
+    };
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getCompanyList()
+        })
+        return unsubscribe
+    }, [dispatch, navigation])
+
+    useEffect(() => {
+        const mappedData = map(companyList?.data, item => (
+        {
+            key: item?.id,
+            value: item?.company_name
+        }
+        ));
+        setDropdownCompanyList(mappedData)
+    }, [companyList])
 
     const postCustomer = () => {
         let data = {
             fullname: fullName,
             address: customerAddress,
             phone_number: phoneNumber,
-            company_id: 'd84c6493-a14e-4bdf-9970-49a00144900f'
+            company_id: selectedCompanyId
         }
         console.log(`PostCustomer: ${data}`)
         let response = {
@@ -183,6 +224,18 @@ const NewCustomerFormPage = () => {
                             value={customerAddress}
                         />
                     </View>
+                    <View style={{ marginTop: 20 }}>
+                        <Text style={{ fontFamily: 'Poppins-Medium', color: (!customerAddressFocus) ? '#000' : '#505383', fontSize: (!customerAddressFocus) ? 12 : 14 }}>
+                            Selected Company
+                        </Text>
+                        <SelectList 
+                            setSelected={(val) => setSelectedCompanyId(val)} 
+                            data={dropdownCompanyList} 
+                            save="key"
+                            fontFamily='Poppins-Regular'
+                            placeholder="Company"
+                        />
+                    </View>
                     <View style={{ marginTop: 25 }} >
                         <TouchableOpacity onPress={() => postCustomer()} disabled={disableSaveButton} style={{ backgroundColor: (disableSaveButton) ? '#CACEDD' : '#505384', padding: 10, paddingHorizontal: 40, borderRadius: 10 }}>
                             <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
@@ -195,6 +248,11 @@ const NewCustomerFormPage = () => {
                 {(showFailedModal) ? failedModal() : null}
                 {(showSuccessModal) ? successModal() : null}
             </View>
+            <Spinner
+                visible={companySpinner}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+            />
         </View>
     )
 }
@@ -219,4 +277,14 @@ const styles = StyleSheet.create({
         marginTop: 21,
         marginBottom: 14
     },
+    dropdownTitle: {
+        fontFamily: 'Poppins-Regular',
+        fontSize: 14,
+        color: '#505383',
+        marginBottom: 2
+    },
+    dropdownContent: {
+        fontFamily: 'Poppins-Regular',
+        fontSize: 14,
+    }
 })

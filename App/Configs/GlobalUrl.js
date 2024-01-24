@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-const DefaultURL = 'https://tp-new-production.up.railway.app';
+const DefaultURL = 'https://tp-new-development.up.railway.app';
 
 module.exports = {
   URL_LOGIN: `${DefaultURL}/login`,
