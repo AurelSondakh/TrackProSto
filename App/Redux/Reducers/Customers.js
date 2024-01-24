@@ -3,6 +3,7 @@ import * as actionTypes from '../Constants/Types'
 
 const initialState = {
     customerList: [],
+    addCustomerResponse: [],
     customerSpinner: false
 }
 
@@ -25,6 +26,28 @@ export const CustomerReducer = (state = initialState, action) => {
         ...state,
         error: action.error,
         customerSpinner: false
+      };
+    case actionTypes.ADD_CUSTOMERS_REQUEST:
+      return {
+        ...state,
+        customerSpinner: true
+      };
+    case actionTypes.ADD_CUSTOMERS_SUCCESS:
+      return {
+        ...state,
+        addCustomerResponse: action.payload,
+        customerSpinner: false
+      };
+    case actionTypes.ADD_CUSTOMERS_FAILURE:
+      return {
+        ...state,
+        error: action.error,
+        customerSpinner: false
+      };
+    case 'RESET_DATA_ADD_CUSTOMER_RESPONSE':
+      return {
+        ...state,
+        addCustomerResponse: [],
       };
     default:
       return state;

@@ -6,6 +6,8 @@ import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 import { ActionCompany } from '../../../Redux/Actions/Company'
+import { ActionCustomer } from '../../../Redux/Actions/Customers'
+import { ActionUtility } from '../../../Redux/Actions/Utility';
 import GetLoginToken from '../../../Utility/GetLoginToken';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { SelectList } from 'react-native-dropdown-select-list'
@@ -29,10 +31,11 @@ const NewCustomerFormPage = () => {
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showFailedModal, setShowFailedModal] = useState(false)
     const [dropdownCompanyList, setDropdownCompanyList] = useState(null)
-    const [selectedCompanyId, setSelectedCompanyId] = useState()
+    const [selectedCompanyId, setSelectedCompanyId] = useState(null)
 
     const dispatch = useDispatch();
     const { companyList, companySpinner } = useSelector((state) => state.company);
+    const { addCustomerResponse, customerSpinner } = useSelector((state) => state.customer);
 
     const getCompanyList = async () => {
         try {
@@ -64,28 +67,59 @@ const NewCustomerFormPage = () => {
         setDropdownCompanyList(mappedData)
     }, [companyList])
 
-    const postCustomer = () => {
+    const postCustomer = async () => {
         let data = {
             fullname: fullName,
             address: customerAddress,
             phone_number: phoneNumber,
             company_id: selectedCompanyId
         }
-        console.log(`PostCustomer: ${data}`)
-        let response = {
-            statuscode: 400,
+        try {
+            const loginToken = await GetLoginToken()
+            dispatch(
+                ActionCustomer.AddCustomers(
+                   loginToken,
+                   data
+                ),
+            );
+        } catch (error) {
+          console.log('getLoginTokenError: ', error);
         }
+    }
 
-        if(response.statuscode === 200) {
-            setShowSuccessModal(true)
-        } else setShowFailedModal(true)
+    const resetState = () => {
+        setFullName('')
+        setFullNameFocus(false)
+        setErrorFullNameField(false)
+        setDisableSaveButton(true)
+        setPhoneNumber('')
+        setPhoneNumberFocus(false)
+        setErrorPhoneNumberField(false)
+        setDisableSaveButton(true)
+        setCustomerAddress('')
+        setCustomerAddressFocus(false)
+        setSelectedCompanyId(null)
     }
 
     useEffect(() => {
-        if(fullName !== '' && customerAddress !== '' && phoneNumber !== '' && !errorFullNameField && !errorPhoneNumberField) {
+        console.log(addCustomerResponse, 'addCustomerResponse')
+        if('statuscode' in addCustomerResponse) {
+            if(addCustomerResponse.statuscode === 200) {
+                resetState()
+                setShowSuccessModal(true)
+                dispatch(ActionUtility.ResetDataAddCustomerResponse())
+            } else {
+                console.log(addCustomerResponse)
+                setShowFailedModal(true)
+            }
+        }
+    }, [addCustomerResponse, dispatch])
+
+    useEffect(() => {
+        if(fullName !== '' && customerAddress !== '' && phoneNumber !== '' && selectedCompanyId !== null && !errorFullNameField && !errorPhoneNumberField) {
             setDisableSaveButton(false)
         } else setDisableSaveButton(true)
-    }, [fullName, customerAddress, phoneNumber, errorFullNameField, errorPhoneNumberField])
+    }, [fullName, customerAddress, phoneNumber, errorFullNameField, errorPhoneNumberField, selectedCompanyId])
 
     useEffect(() => {
         const regexFullName = /^(?!\s+$)[a-zA-Z\s]+$/
@@ -108,7 +142,7 @@ const NewCustomerFormPage = () => {
                             <View style={{ alignSelf: 'center', marginTop: 40, marginHorizontal: 15 }}>
                                 <Image source={require('../../../assets/correctModal.png')} style={{ width: 128, height: 128, alignSelf: 'center' }} />
                                 <Text style={{ fontFamily: 'Poppins-Medium', fontSize: 14, paddingHorizontal: 10, textAlign: 'center' }}>Customer has been added successfully</Text>
-                                <TouchableOpacity onPress={() => {setShowSuccessModal(false); navigation.goBack()}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
+                                <TouchableOpacity onPress={() => {setShowSuccessModal(false); navigation.navigate('BottomTabNavigator')}} style={{ paddingHorizontal: 20, paddingVertical: 15, backgroundColor: '#505383', borderRadius: 10, marginTop: 15 }}>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 14, color: '#FFF', alignSelf: 'center' }}>
                                         Close
                                     </Text>
@@ -249,7 +283,7 @@ const NewCustomerFormPage = () => {
                 {(showSuccessModal) ? successModal() : null}
             </View>
             <Spinner
-                visible={companySpinner}
+                visible={companySpinner || customerSpinner}
                 textContent={'Loading...'}
                 textStyle={{ color: '#FFF' }}
             />
