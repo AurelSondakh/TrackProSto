@@ -2,7 +2,8 @@
 import * as actionTypes from '../Constants/Types'
 
 const initialState = {
-    loginData: ''
+    loginData: '',
+    loginSpinner: false
 }
 
 export const UtilityReducer = (state = initialState, action) => {
@@ -10,16 +11,19 @@ export const UtilityReducer = (state = initialState, action) => {
     // ============= LOGIN ===================
     case actionTypes.LOGIN_REQUEST:
       return {
-        ...state
+        ...state,
+        loginSpinner: false
       };
     case actionTypes.LOGIN_SUCCESS:
       return {
         ...state,
+        loginSpinner: true,
         loginData: action.payload,
       };
     case actionTypes.LOGIN_FAILURE:
       return {
         ...state,
+        loginSpinner: false,
         error: action.error,
       };
     default:

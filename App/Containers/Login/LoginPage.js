@@ -16,7 +16,7 @@ const LoginPage = () => {
 
     //Redux
     const {
-        loginData
+        loginData, loginSpinner
     } = useSelector((state) => state.utility);
     const dispatch = useDispatch();
 
@@ -38,6 +38,9 @@ const LoginPage = () => {
                 loginCredential
             ),
         );
+    }
+
+    useEffect(() => {
         if(loginData?.statuscode === 200) {
             AsyncStorage.setItem('loginToken', loginData?.data)
             navigation.reset({
@@ -45,7 +48,7 @@ const LoginPage = () => {
                 routes: [{ name: 'BottomTabNavigator' }]
             })
         }
-    }
+    }, [loginData])
 
     return (
         <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>

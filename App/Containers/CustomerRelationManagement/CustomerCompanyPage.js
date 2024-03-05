@@ -121,7 +121,7 @@ const CustomerCompanyPage = () => {
                 style={{ marginBottom: 70 }}
                 nestedScrollEnabled
                 data={customerList?.data?.customers}
-                renderItem={({item}) => <CustomerList item={item} swipe={true} userRole={userRole} />}
+                renderItem={({item}) => <CustomerList item={item} swipe={true} userRole={userRole} refreshFunction={getCustomerList} />}
                 keyExtractor={item => item.customer_id}
             />
         </View>

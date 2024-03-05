@@ -50,7 +50,7 @@ const InventoryList = ({item, refreshFunction}) => {
     }
 
     const deleteMeat = async () => {
-        console.log('Meat Id', item?.Meat?.id)
+        console.log('DELETEING INVENTORY WITH MEAT ID: ', item?.Meat?.id)
         try {
             const loginToken = await GetLoginToken();
             dispatch(
